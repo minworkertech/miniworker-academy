@@ -1,0 +1,35 @@
+---
+import Icon from './Icon.astro';
+import { pains } from '../data/pains';
+---
+
+<section class="sec" id="problema">
+	<div class="wrap">
+		<span class="eyebrow">Reconoce esto</span>
+		<h2 class="t">Es domingo, son las 11 de la noche y vas por la entrega 40.</h2>
+		<p class="lead">
+			No importa si enseñas programación, derecho o gestión: con dos o tres cursos y muchos
+			estudiantes, calificar deja de ser enseñar y pasa a ser resistencia física.
+		</p>
+		<div class="pains">
+			{
+				pains.map((pain) => (
+					<div class="pain">
+						<div class="h">
+							<Icon name={pain.icon} />
+							<h4>{pain.title}</h4>
+						</div>
+						<p>{pain.body}</p>
+					</div>
+				))
+			}
+		</div>
+		<div class="closer">
+			<strong>Enseñar bien no debería costarte los fines de semana.</strong>
+			<span>
+				El problema no es tu método: es que estás haciendo a mano un trabajo repetitivo que ya se
+				puede medir y automatizar.
+			</span>
+		</div>
+	</div>
+</section>

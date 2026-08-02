@@ -1,0 +1,39 @@
+---
+import Icon from './Icon.astro';
+import { methodology } from '../data/methodology';
+
+const half = Math.ceil(methodology.length / 2);
+const columns = [methodology.slice(0, half), methodology.slice(half)];
+---
+
+<section class="sec sec-tint" id="metodologia">
+	<div class="wrap">
+		<span class="eyebrow">La metodología</span>
+		<h2 class="t">Talleres con retos reales, no ejercicios de juguete.</h2>
+		<p class="lead">
+			Yura diseña cada taller a partir de la realidad: retos de un trabajo real y problemas de la
+			vida presente. Es una decisión pedagógica, y es la razón de fondo del producto.
+		</p>
+		<div class="method">
+			{
+				columns.map((column) => (
+					<div>
+						{column.map((row) => (
+							<div class="mrow">
+								<Icon name={row.icon} />
+								<div>
+									<h3>{row.title}</h3>
+									<p>{row.body}</p>
+								</div>
+							</div>
+						))}
+					</div>
+				))
+			}
+		</div>
+		<p class="quote">
+			Tus estudiantes practican <em>lo que de verdad van a enfrentar</em>, no lo que cabe en un
+			examen.
+		</p>
+	</div>
+</section>

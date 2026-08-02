@@ -1,0 +1,42 @@
+---
+import Icon from './Icon.astro';
+import { chips, comparison } from '../data/comparison';
+---
+
+<section class="sec" id="por-que">
+	<div class="wrap">
+		<span class="eyebrow">Por qué Yura</span>
+		<h2 class="t">Con honestidad, contra lo de siempre.</h2>
+		<p class="lead">
+			Las herramientas en inglés llevan años puliendo su producto y funcionan bien. El punto es otro:
+			no fueron pensadas para tu aula, tu presupuesto ni tu idioma.
+		</p>
+		<div class="chips">
+			{
+				chips.map((chip) => (
+					<span class="chip">
+						<Icon name={chip.icon} />
+						{chip.label}
+					</span>
+				))
+			}
+		</div>
+		<div class="cmp">
+			{
+				comparison.map((row) => (
+					<div class="r">
+						<div class="k">{row.topic}</div>
+						<div class="a">
+							<span class="lbl">Otros</span>
+							{row.others}
+						</div>
+						<div class="b">
+							<span class="lbl">Yura</span>
+							{row.yura}
+						</div>
+					</div>
+				))
+			}
+		</div>
+	</div>
+</section>

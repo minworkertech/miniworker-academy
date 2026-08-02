@@ -67,28 +67,52 @@ Para más detalles sobre la configuración, consulta [ENV_SETUP.md](./ENV_SETUP.
 ```
 /
 ├── public/
-│   └── favicon.svg
+│   ├── favicon.svg      # Marca de Yura (también sirve de logo en header y footer)
+│   └── icons/           # Iconos lucide usados como máscara CSS (--u)
 ├── src/
 │   ├── assets/          # Imágenes y recursos estáticos
-│   ├── components/       # Componentes Astro reutilizables
-│   │   ├── FeatureCard.astro
-│   │   ├── FeaturesSection.astro
-│   │   ├── Footer.astro
+│   ├── components/      # Una sección de la landing por componente
+│   │   ├── Header.astro
 │   │   ├── HeroSection.astro
-│   │   ├── HowItWorksSection.astro
-│   │   ├── MessageCard.astro
-│   │   ├── MessagesSection.astro
-│   │   ├── Navigation.astro
-│   │   ├── StepCard.astro
-│   │   └── WaitlistSection.astro
-│   ├── data/            # Datos y configuraciones
-│   │   ├── features.ts
-│   │   ├── howItWorks.ts
-│   │   └── messages.ts
+│   │   ├── ProductMock.astro
+│   │   ├── ProblemSection.astro
+│   │   ├── StepsSection.astro
+│   │   ├── DemoSection.astro
+│   │   ├── CapabilitiesSection.astro
+│   │   ├── SubjectsSection.astro
+│   │   ├── MethodologySection.astro
+│   │   ├── WhyYuraSection.astro
+│   │   ├── PricingSection.astro
+│   │   ├── NewsletterSection.astro
+│   │   ├── SignupSection.astro
+│   │   ├── HonestySection.astro
+│   │   ├── FaqSection.astro
+│   │   ├── FinalCtaSection.astro
+│   │   ├── Footer.astro
+│   │   ├── StickyCta.astro
+│   │   ├── Icon.astro   # <span class="ic"> con máscara del icono
+│   │   └── Tick.astro
+│   ├── data/            # Contenido de cada sección
+│   │   ├── capabilities.ts
+│   │   ├── comparison.ts
+│   │   ├── cta.ts
+│   │   ├── faq.ts
+│   │   ├── honesty.ts
+│   │   ├── methodology.ts
+│   │   ├── mock.ts
+│   │   ├── pains.ts
+│   │   ├── pricing.ts
+│   │   ├── steps.ts
+│   │   └── subjects.ts
 │   ├── layouts/         # Layouts base
 │   │   └── Layout.astro
-│   └── pages/           # Páginas del sitio
-│       └── index.astro
+│   ├── pages/           # Páginas del sitio
+│   │   └── index.astro
+│   ├── scripts/         # Lógica de cliente compartida
+│   │   ├── track.ts     # Analytics (Plausible / Umami / dataLayer)
+│   │   └── waitlist.ts  # Envío de { email, subject } a la Google Sheet
+│   └── styles/
+│       └── global.css   # Tokens y estilos de toda la landing
 ├── astro.config.mjs     # Configuración de Astro
 ├── eslint.config.mjs    # Configuración de ESLint
 ├── package.json

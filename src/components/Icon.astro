@@ -1,0 +1,14 @@
+---
+interface Props {
+	name: string;
+	class?: string;
+	style?: string;
+}
+
+const { name, class: className, style } = Astro.props;
+---
+
+<span
+	class:list={['ic', className]}
+	style={`--u:url(/icons/${name}.svg);${style ?? ''}`}
+	aria-hidden="true"></span>

@@ -1,0 +1,27 @@
+---
+import { honestyCards } from '../data/honesty';
+---
+
+<section class="sec" id="honestidad">
+	<div class="wrap">
+		<span class="eyebrow">Honestidad</span>
+		<h2 class="t">Qué no hace Yura.</h2>
+		<p class="lead">Estamos empezando y preferimos decírtelo antes de que entres.</p>
+		<div class="grid2">
+			{
+				honestyCards.map((card) => (
+					<div class="card">
+						<h3>{card.title}</h3>
+						<p set:html={card.body} />
+					</div>
+				))
+			}
+		</div>
+		<div class="ph">
+			<p>
+				[ espacio reservado para los primeros pilotos ]<br />todavía no tenemos casos que mostrar.
+				cuando existan, van aquí — con nombre, universidad y curso.
+			</p>
+		</div>
+	</div>
+</section>

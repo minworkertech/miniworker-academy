@@ -1,0 +1,24 @@
+---
+import { CTA_HREF, CTA_LABEL } from '../data/cta';
+---
+
+<section class="brand sec" id="cierre">
+	<span class="blob v"></span><span class="blob s"></span>
+	<div class="wrap" style="text-align:center">
+		<h2
+			class="t"
+			style="font-size:clamp(30px,7.6vw,50px);font-weight:800;margin:0 auto;max-width:15ch;letter-spacing:-0.04em"
+		>
+			Recupera tus noches de domingo.
+		</h2>
+		<p class="lead" style="margin:18px auto 0;max-width:52ch">
+			Este semestre, un curso real, gratis. Cuéntanos tu materia y la abrimos contigo.
+		</p>
+		<div style="display:flex;justify-content:center;margin-top:28px">
+			<a class="btn onDark" href={CTA_HREF} data-cta="cierre">{CTA_LABEL}</a>
+		</div>
+		<p class="micro" style="color:rgba(233,238,255,.62)">
+			Sin tarjeta<span class="sep">·</span>En español<span class="sep">·</span>Cuéntanos tu materia
+		</p>
+	</div>
+</section>

@@ -1,0 +1,130 @@
+---
+import Tick from './Tick.astro';
+import { CTA_LABEL } from '../data/cta';
+import { subjectSuggestions } from '../data/subjects';
+
+const checks = [
+	'Cargas tu sílabo y tus rúbricas y armamos tu primer taller contigo',
+	'Si enseñas programación, entras al piloto que ya está corriendo',
+	'Si enseñas otra materia, tu registro decide cuál construimos primero',
+];
+---
+
+<section class="brand sec" id="crear-cuenta">
+	<span class="blob v"></span><span class="blob i"></span><span class="blob s"></span>
+	<div class="wrap two">
+		<div>
+			<span class="eyebrow">Crear cuenta</span>
+			<h2 class="t">Crear tu cuenta es pedir el acceso.</h2>
+			<p class="lead">
+				Un solo funnel: creas la cuenta, nos cuentas qué materia enseñas y abrimos tu curso en el
+				acceso anticipado. Sin tarjeta y sin llamada de ventas.
+			</p>
+			<ul class="checks" style="margin-top:24px">
+				{
+					checks.map((check) => (
+						<li>
+							<Tick />
+							<span style="color:rgba(233,238,255,.78)">{check}</span>
+						</li>
+					))
+				}
+			</ul>
+		</div>
+		<div class="signup">
+			<form class="form" id="signupForm" method="post" novalidate>
+				<div class="field hideOnSent">
+					<label for="su-email">Correo</label>
+					<input
+						class="inp"
+						type="email"
+						id="su-email"
+						name="email"
+						placeholder="tu.nombre@universidad.edu"
+						autocomplete="email"
+						required
+					/>
+				</div>
+				<div class="field hideOnSent">
+					<label for="su-materia">¿Qué materia enseñas?</label>
+					<input
+						class="inp"
+						type="text"
+						id="su-materia"
+						name="subject"
+						list="materias"
+						placeholder="derecho penal, cálculo, marketing…"
+						autocomplete="off"
+						required
+					/>
+					<datalist id="materias">
+						{subjectSuggestions.map((item) => <option value={item} />)}
+					</datalist>
+					<p class="hint hideOnSent">Con esto decidimos qué materia construimos primero.</p>
+				</div>
+				<p class="err" id="signupErr">Revisa tu correo y cuéntanos qué materia enseñas.</p>
+				<button class="btn onDark block hideOnSent" type="submit" id="signupSubmit">
+					{CTA_LABEL}
+				</button>
+				<p
+					class="micro hideOnSent"
+					style="color:rgba(233,238,255,.6);text-align:center"
+				>
+					Sin tarjeta<span class="sep">·</span>En español<span class="sep">·</span>Gratis para los
+					primeros cursos
+				</p>
+				<p class="ok">
+					<Tick />Listo. Te escribimos a tu correo con el acceso y los siguientes pasos.
+				</p>
+			</form>
+		</div>
+	</div>
+</section>
+
+<script>
+	import { isEmail, submitToSheet } from '../scripts/waitlist';
+	import { track } from '../scripts/track';
+	import { CTA_LABEL } from '../data/cta';
+
+	const form = document.getElementById('signupForm') as HTMLFormElement | null;
+	const emailInput = document.getElementById('su-email') as HTMLInputElement | null;
+	const subjectInput = document.getElementById('su-materia') as HTMLInputElement | null;
+	const submitBtn = document.getElementById('signupSubmit') as HTMLButtonElement | null;
+	const errorText = document.getElementById('signupErr');
+
+	form?.addEventListener('submit', async (event) => {
+		event.preventDefault();
+		if (!emailInput || !subjectInput) return;
+
+		const email = emailInput.value.trim();
+		const subject = subjectInput.value.trim();
+
+		if (!isEmail(email) || subject.length < 2) {
+			if (errorText) errorText.textContent = 'Revisa tu correo y cuéntanos qué materia enseñas.';
+			form.classList.add('invalid');
+			return;
+		}
+
+		form.classList.remove('invalid');
+		if (submitBtn) {
+			submitBtn.disabled = true;
+			submitBtn.textContent = 'Enviando…';
+		}
+
+		try {
+			await submitToSheet({ email, subject });
+			track('signup_acceso_anticipado', { materia: subject.toLowerCase() });
+			form.classList.add('sent');
+		} catch {
+			if (errorText) {
+				errorText.textContent = 'No pudimos guardar tu registro. Inténtalo de nuevo.';
+			}
+			form.classList.add('invalid');
+		} finally {
+			if (submitBtn) {
+				submitBtn.disabled = false;
+				submitBtn.textContent = CTA_LABEL;
+			}
+		}
+	});
+</script>

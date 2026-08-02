@@ -1,0 +1,131 @@
+---
+import Icon from './Icon.astro';
+import { CTA_HREF, CTA_LABEL } from '../data/cta';
+
+const uploads = [
+	{ icon: 'file-text', name: 'silabo-2026-1.pdf' },
+	{ icon: 'list-checks', name: 'rubrica-taller.docx' },
+	{ icon: 'calendar-days', name: 'temas-semestre.md' },
+];
+---
+
+<section class="sec" id="demo">
+	<div class="wrap">
+		<span class="eyebrow">Cómo funciona</span>
+		<h2 class="t">Mira cómo un taller pasa de tu plan a una nota.</h2>
+		<p class="lead">
+			Sin que toques infraestructura: cargas tu planificación, Yura arma el taller, califica la
+			entrega con feedback y tú exportas a Moodle.
+		</p>
+
+		{/*
+			VIDEO REAL (30–60 s, autoplay + muted + loop). Reemplaza este bloque por:
+			<video class="ratio" src="/demo-yura.webm" poster="/demo-poster.webp" width="1280" height="720"
+			       autoplay muted loop playsinline preload="metadata" controls></video>
+			…o embebe Loom/YouTube con loading="lazy" y el mismo marco.
+		*/}
+		<div
+			class="video"
+			role="img"
+			aria-label="Espacio reservado para el video de demostración de Yura"
+		>
+			<span class="blob v" style="opacity:.22"></span><span class="blob s" style="opacity:.12"
+			></span>
+			<div class="ratio">
+				<div>
+					<div class="play"><Icon name="play" /></div>
+					<div class="t1">Video de 45 s: de la planificación a la nota</div>
+					<div class="t2">
+						[ placeholder · aquí va el demo real en webm/mp4, autoplay muted loop, con width/height
+						definidos ]
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="shots">
+			<div class="shot">
+				<div class="cap"><span class="n">1</span>cargas tu materia</div>
+				<div class="in">
+					{
+						uploads.map((file) => (
+							<div class="filerow">
+								<Icon name={file.icon} />
+								{file.name}
+								<span class="st">✓</span>
+							</div>
+						))
+					}
+					<p class="caption" style="text-align:left;margin-top:11px">
+						una sola vez, al inicio del semestre
+					</p>
+				</div>
+			</div>
+			<div class="shot">
+				<div class="cap"><span class="n">2</span>Yura genera el taller</div>
+				<div class="in">
+					<div class="wcard">
+						<span class="tag t">Taller 05</span>
+						<div class="tt" style="margin-top:8px">Caso real de la semana 7</div>
+						<div class="ds">
+							Alineado a tu tema y a tu rúbrica, con un reto tomado de una situación profesional
+							actual.
+						</div>
+						<div class="crit">
+							<div class="c">Análisis del caso<b>40</b></div>
+							<div class="c">Uso de evidencia<b>35</b></div>
+							<div class="c">Claridad y estructura<b>25</b></div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="shot">
+				<div class="cap"><span class="n">3</span>califica con feedback</div>
+				<div class="in">
+					<div class="wcard">
+						<div class="grade">
+							<span class="g">4,3</span><span class="u">/ 5,0 · taller 05</span>
+						</div>
+						<div class="crit">
+							<div class="c">Análisis del caso<b>36/40</b></div>
+							<div class="c">Uso de evidencia<b>28/35</b></div>
+							<div class="c">Claridad y estructura<b>22/25</b></div>
+						</div>
+						<p class="fb">
+							<b>Feedback al estudiante:</b> el argumento central está bien sostenido; falta contrastar
+							la fuente principal con un caso opuesto.
+						</p>
+					</div>
+				</div>
+			</div>
+			<div class="shot">
+				<div class="cap"><span class="n">4</span>exportas a Moodle</div>
+				<div class="in">
+					<div class="wcard">
+						<div class="crit">
+							<div class="c">Talleres (40%)<b>4,1</b></div>
+							<div class="c">Proyecto (40%)<b>4,4</b></div>
+							<div class="c">Participación (20%)<b>3,9</b></div>
+							<div
+								class="c"
+								style="border-top:1px solid var(--border-soft);padding-top:7px;color:var(--fg)"
+							>
+								Nota final<b>4,2</b>
+							</div>
+						</div>
+						<div style="display:flex;gap:7px;margin-top:12px;flex-wrap:wrap">
+							<span class="tag t">Moodle</span><span class="tag t">CSV</span><span class="tag g"
+								>Con evidencia</span
+							>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="demo-cta">
+			<a class="btn primary" href={CTA_HREF} data-cta="demo">{CTA_LABEL}</a>
+			<p class="micro">Gratis para los primeros cursos<span class="sep">·</span>Cuéntanos tu materia</p>
+		</div>
+	</div>
+</section>

@@ -1,0 +1,36 @@
+---
+import { steps } from '../data/steps';
+---
+
+<section class="sec sec-tint" id="como-funciona">
+	<div class="wrap">
+		<span class="eyebrow">La solución</span>
+		<h2 class="t">Tres pasos. Y ninguno te quita la noche.</h2>
+		<p class="lead">
+			Tú pones la regla del juego una vez; Yura la ejecuta en cada entrega, con tus formatos.
+		</p>
+		<div class="steps">
+			{
+				steps.map((step) => (
+					<div class="step">
+						<div class="num">{step.num}</div>
+						<h3>{step.title}</h3>
+						<p>{step.body}</p>
+						<div class="evidence">
+							{step.evidence.map(([label, value]) => (
+								<div class="ln">
+									{label}
+									<b>{value}</b>
+								</div>
+							))}
+						</div>
+					</div>
+				))
+			}
+		</div>
+		<p class="infra">
+			<b>Tú no operas infraestructura.</b> No hay servidores, pipelines ni configuraciones de tu lado:
+			solo consumes resultados.
+		</p>
+	</div>
+</section>

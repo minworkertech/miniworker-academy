@@ -1,104 +1,59 @@
 ---
-import logo from '../assets/yura_slogan1_wb.svg';
+import logo from '../assets/yura-slogan-alineado.svg';
+
 const currentYear = new Date().getFullYear();
+
+const columns = [
+	{
+		title: 'Contacto',
+		links: [
+			{ label: 'yura.app', href: 'https://yura.app' },
+			{ label: 'hola@yura.app', href: 'mailto:hola@yura.app' },
+			{ label: 'Blog', href: '/blog' },
+		],
+	},
+	{
+		title: 'Producto',
+		links: [
+			{ label: 'Cómo funciona', href: '#demo' },
+			{ label: 'Precios', href: '#precios' },
+			{ label: 'Preguntas frecuentes', href: '#faq' },
+		],
+	},
+];
 ---
 
-<footer class="footer">
-	<div class="footer-container">
-		<div class="footer-logo">
-			<img src={logo.src} alt="YURA" />
+<footer>
+	<div class="wrap ft">
+		<div class="cols">
+			<div>
+				<a class="logo" href="#top" style="margin-bottom:10px" aria-label="Yura">
+					<img
+						class="wordmark lema"
+						src={logo.src}
+						alt="Yura · Planifica. Automatiza. Enseña"
+						width={logo.width}
+						height={logo.height}
+					/>
+				</a>
+				<p style="font-size:14px;color:var(--muted-fg);max-width:36ch">
+					Un entorno de trabajo inteligente para docentes: tú pones tu materia, Yura arma los
+					talleres y califica.
+				</p>
+			</div>
+			{
+				columns.map((column) => (
+					<div>
+						<div class="eyebrow dim" style="margin-bottom:8px">
+							{column.title}
+						</div>
+						{column.links.map((link) => (
+							<a href={link.href}>{link.label}</a>
+						))}
+					</div>
+				))
+			}
 		</div>
-		<p class="footer-tagline">
-			Apoyando tu crecimiento en el mundo del desarrollo.
-		</p>
-		<div class="footer-divider"></div>
-		<p class="footer-copyright">
-			© {currentYear} YURA. Todos los derechos reservados.
-		</p>
+		<div class="cr">© {currentYear} Yura · hecho en LATAM, para docentes de LATAM.</div>
 	</div>
 </footer>
-
-<style>
-	.footer {
-		background: #ffffff;
-		padding: 4rem 3rem 2rem 3rem;
-		border-top: 1px solid #e0f2fe;
-	}
-
-	.footer-container {
-		max-width: 1400px;
-		margin: 0 auto;
-		text-align: center;
-	}
-
-	.footer-logo {
-		margin-bottom: 1.5rem;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-	}
-
-	.footer-logo img {
-		max-width: 200px;
-		height: auto;
-	}
-
-	.footer-tagline {
-		font-size: 1.125rem;
-		color: #64748b;
-		line-height: 1.7;
-		margin: 0 auto 2rem auto;
-		max-width: 600px;
-	}
-
-	.footer-divider {
-		width: 100%;
-		height: 1px;
-		background: #e0f2fe;
-		margin: 2rem 0;
-	}
-
-	.footer-copyright {
-		font-size: 0.875rem;
-		color: #94a3b8;
-		margin: 0;
-	}
-
-	@media (max-width: 768px) {
-		.footer {
-			padding: 3rem 2rem 1.5rem 2rem;
-		}
-
-		.footer-logo img {
-			max-width: 150px;
-		}
-
-		.footer-tagline {
-			font-size: 1rem;
-			margin-bottom: 1.5rem;
-		}
-
-		.footer-divider {
-			margin: 1.5rem 0;
-		}
-
-		.footer-copyright {
-			font-size: 0.8125rem;
-		}
-	}
-
-	@media (max-width: 480px) {
-		.footer {
-			padding: 2.5rem 1.5rem 1.25rem 1.5rem;
-		}
-
-		.footer-logo img {
-			max-width: 120px;
-		}
-
-		.footer-tagline {
-			font-size: 0.9375rem;
-		}
-	}
-</style>
-

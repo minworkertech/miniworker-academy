@@ -1,0 +1,28 @@
+---
+import { CTA_HREF, CTA_LABEL } from '../data/cta';
+---
+
+<div class="sticky" id="sticky">
+	<a class="btn primary" href={CTA_HREF} data-cta="sticky">{CTA_LABEL}</a>
+	<div class="mc">Sin tarjeta · Gratis para los primeros cursos</div>
+</div>
+
+<script>
+	// CTA fija en móvil: aparece tras el hero y se esconde sobre el registro.
+	const sticky = document.getElementById('sticky');
+	const hero = document.querySelector('.hero');
+	const signup = document.getElementById('crear-cuenta');
+
+	if (sticky && hero && signup) {
+		const update = () => {
+			const pastHero = hero.getBoundingClientRect().bottom < 0;
+			const signupRect = signup.getBoundingClientRect();
+			const signupVisible = signupRect.top < window.innerHeight && signupRect.bottom > 0;
+			sticky.classList.toggle('on', pastHero && !signupVisible);
+		};
+
+		window.addEventListener('scroll', update, { passive: true });
+		window.addEventListener('resize', update);
+		update();
+	}
+</script>

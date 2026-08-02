@@ -1,0 +1,40 @@
+---
+import Tick from './Tick.astro';
+import { subjects } from '../data/subjects';
+import { CTA_HREF, CTA_LABEL } from '../data/cta';
+---
+
+<section class="sec" id="materias">
+	<div class="wrap">
+		<span class="eyebrow">Dos materias, un mismo motor</span>
+		<h2 class="t">Empezamos por dos. El motor sirve para la tuya.</h2>
+		<div class="grid2">
+			{
+				subjects.map((subject) => (
+					<div class="subject">
+						<div class="top">
+							<h3>{subject.name}</h3>
+							<span class:list={['tag', subject.statusTone]}>{subject.status}</span>
+						</div>
+						<p>{subject.body}</p>
+						<ul>
+							{subject.bullets.map((bullet) => (
+								<li>
+									<Tick />
+									{bullet}
+								</li>
+							))}
+						</ul>
+					</div>
+				))
+			}
+		</div>
+		<div class="engine">
+			<b>¿Enseñas otra materia? El motor es el mismo.</b>
+			<span>
+				Cuéntanos la tuya en el registro y la construimos contigo.{' '}
+				<a href={CTA_HREF} data-cta="materias">{CTA_LABEL}</a>.
+			</span>
+		</div>
+	</div>
+</section>
