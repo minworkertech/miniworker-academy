@@ -291,6 +291,8 @@ footer{border-top:1px solid var(--border-soft);padding:34px 0 110px;background:v
 .ft .cols{display:grid;gap:18px}
 .ft a{font-size:14.5px;color:var(--muted-fg);display:block;padding:3px 0}
 .ft a:hover{color:var(--teal-deep)}
+.ft .social a{display:flex;align-items:center;gap:8px}
+.ft .social svg{flex:none;opacity:.85}
 .ft .cr{font-size:12.5px;color:var(--muted-fg);border-top:1px solid var(--border);padding-top:16px}
 
 /* cta fija móvil */

@@ -3,15 +3,20 @@ import logo from '../assets/yura-slogan-alineado.svg';
 
 const currentYear = new Date().getFullYear();
 
-const columns = [
+const socials = [
 	{
-		title: 'Contacto',
-		links: [
-			{ label: 'yura.app', href: 'https://yura.app' },
-			{ label: 'hola@yura.app', href: 'mailto:hola@yura.app' },
-			{ label: 'Blog', href: '/blog' },
-		],
+		label: 'Instagram',
+		href: 'https://www.instagram.com/somos_yura_ecu/',
+		path: 'M12 2.2c3.2 0 3.6 0 4.9.07 1.2.05 1.8.25 2.2.42.6.22 1 .48 1.4.9.43.42.7.83.92 1.4.17.42.37 1.05.42 2.2.06 1.3.07 1.7.07 4.9s-.01 3.6-.07 4.9c-.05 1.2-.25 1.8-.42 2.2-.22.6-.49 1-.91 1.4-.42.43-.83.7-1.4.92-.42.17-1.05.37-2.2.42-1.3.06-1.7.07-4.9.07s-3.6-.01-4.9-.07c-1.2-.05-1.8-.25-2.2-.42-.6-.22-1-.49-1.4-.91-.43-.42-.7-.83-.92-1.4-.17-.42-.37-1.05-.42-2.2C2.21 15.6 2.2 15.2 2.2 12s.01-3.6.07-4.9c.05-1.2.25-1.8.42-2.2.22-.6.49-1 .91-1.4.42-.43.83-.7 1.4-.92.42-.17 1.05-.37 2.2-.42C8.4 2.21 8.8 2.2 12 2.2Zm0 1.98c-3.14 0-3.5.01-4.74.07-1.14.05-1.76.24-2.18.4-.55.21-.94.47-1.35.88-.41.41-.67.8-.88 1.35-.16.42-.35 1.04-.4 2.18-.06 1.24-.07 1.6-.07 4.74s.01 3.5.07 4.74c.05 1.14.24 1.76.4 2.18.21.55.47.94.88 1.35.41.41.8.67 1.35.88.42.16 1.04.35 2.18.4 1.24.06 1.6.07 4.74.07s3.5-.01 4.74-.07c1.14-.05 1.76-.24 2.18-.4.55-.21.94-.47 1.35-.88.41-.41.67-.8.88-1.35.16-.42.35-1.04.4-2.18.06-1.24.07-1.6.07-4.74s-.01-3.5-.07-4.74c-.05-1.14-.24-1.76-.4-2.18a3.6 3.6 0 0 0-.88-1.35 3.6 3.6 0 0 0-1.35-.88c-.42-.16-1.04-.35-2.18-.4-1.24-.06-1.6-.07-4.74-.07Zm0 3.37a5.45 5.45 0 1 1 0 10.9 5.45 5.45 0 0 1 0-10.9Zm0 8.99a3.54 3.54 0 1 0 0-7.08 3.54 3.54 0 0 0 0 7.08Zm6.94-9.2a1.27 1.27 0 1 1-2.55 0 1.27 1.27 0 0 1 2.55 0Z',
 	},
+	{
+		label: 'Facebook',
+		href: 'https://www.facebook.com/profile.php?id=61592624377537',
+		path: 'M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.49-3.92 3.77-3.92 1.09 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.78-1.63 1.57v1.89h2.78l-.45 2.91h-2.33V22c4.78-.76 8.44-4.92 8.44-9.94Z',
+	},
+];
+
+const columns = [
 	{
 		title: 'Producto',
 		links: [
@@ -53,6 +58,24 @@ const columns = [
 					</div>
 				))
 			}
+			<div class="social">
+				<div class="eyebrow dim" style="margin-bottom:8px">Síguenos en redes</div>
+				{
+					socials.map((social) => (
+						<a
+							href={social.href}
+							target="_blank"
+							rel="noopener noreferrer"
+							aria-label={social.label}
+						>
+							<svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" aria-hidden="true">
+								<path d={social.path} />
+							</svg>
+							{social.label}
+						</a>
+					))
+				}
+			</div>
 		</div>
 		<div class="cr">© {currentYear} Yura · hecho en LATAM, para docentes de LATAM.</div>
 	</div>
