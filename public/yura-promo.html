@@ -859,6 +859,7 @@ const SFX = (() => {
   function play(i) {
     idx = i;
     if (i >= scenes.length) { finish(); return; }
+    elapsedBefore = durations.slice(0, i).reduce((a, b) => a + b, 0);
     if (i > 0) SFX.whoosh();
     scenes.forEach((s, j) => { s.classList.toggle('on', j === i); if (j !== i) s.classList.remove('off'); });
     sceneStart = performance.now();
@@ -870,7 +871,6 @@ const SFX = (() => {
 
   function next() {
     clearSfx();
-    elapsedBefore += durations[idx];
     scenes[idx].classList.remove('on');
     scenes[idx].classList.add('off');
     setTimeout(() => play(idx + 1), 150);
