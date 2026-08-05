@@ -18,28 +18,15 @@ const uploads = [
 			entrega con feedback y tú exportas a Moodle.
 		</p>
 
-		{/*
-			VIDEO REAL (30–60 s, autoplay + muted + loop). Reemplaza este bloque por:
-			<video class="ratio" src="/demo-yura.webm" poster="/demo-poster.webp" width="1280" height="720"
-			       autoplay muted loop playsinline preload="metadata" controls></video>
-			…o embebe Loom/YouTube con loading="lazy" y el mismo marco.
-		*/}
-		<div
-			class="video"
-			role="img"
-			aria-label="Espacio reservado para el video de demostración de Yura"
-		>
-			<span class="blob v" style="opacity:.22"></span><span class="blob s" style="opacity:.12"
-			></span>
+		<div class="video video--promo">
 			<div class="ratio">
-				<div>
-					<div class="play"><Icon name="play" /></div>
-					<div class="t1">Video de 45 s: de la planificación a la nota</div>
-					<div class="t2">
-						[ placeholder · aquí va el demo real en webm/mp4, autoplay muted loop, con width/height
-						definidos ]
-					</div>
-				</div>
+				<iframe
+					id="promo-yura"
+					src="/yura-promo.html"
+					title="Video: de la planificación a la nota con Yura"
+					loading="lazy"
+					allow="autoplay"
+					scrolling="no"></iframe>
 			</div>
 		</div>
 
@@ -129,3 +116,56 @@ const uploads = [
 		</div>
 	</div>
 </section>
+
+<style>
+	.video--promo .ratio {
+		display: block;
+		padding: 0;
+	}
+
+	.video--promo iframe {
+		position: absolute;
+		inset: 0;
+		display: block;
+		width: 100%;
+		height: 100%;
+		border: 0;
+	}
+
+	@media (max-width: 640px) {
+		.video--promo .ratio {
+			aspect-ratio: 4 / 3;
+		}
+	}
+</style>
+
+<script>
+	const frame = document.getElementById('promo-yura') as HTMLIFrameElement | null;
+
+	if (frame) {
+		const send = (message: string) => frame.contentWindow?.postMessage(message, location.origin);
+
+		const wake = () => send('yura:audio');
+		(['pointerdown', 'keydown', 'touchstart'] as const).forEach((event) =>
+			document.addEventListener(event, wake, { passive: true })
+		);
+
+		let onScreen = false;
+
+		const sync = () => send(onScreen && !document.hidden ? 'yura:visible' : 'yura:hidden');
+
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				const next = entry.isIntersecting && entry.intersectionRatio >= 0.35;
+				if (next === onScreen) return;
+				onScreen = next;
+				sync();
+			},
+			{ threshold: [0, 0.35, 0.6] }
+		);
+
+		observer.observe(frame);
+		frame.addEventListener('load', sync);
+		document.addEventListener('visibilitychange', sync);
+	}
+</script>
