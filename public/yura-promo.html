@@ -831,17 +831,23 @@ const SFX = (() => {
       grid.appendChild(d);
     }
   })();
+  function resetCounter() {
+    const el = document.getElementById('cnt');
+    if (el) el.textContent = '10';
+  }
   function animateCounter() {
     const el = document.getElementById('cnt');
     if (!el) return;
     el.textContent = '10';
-    const t0 = performance.now(), dur = 2600, from = 10, to = 300;
-    (function f(now) {
-      const p = Math.min(1, (now - t0) / dur);
+    const dur = 2600, from = 10, to = 300;
+    let t0 = null;
+    requestAnimationFrame(function f(now) {
+      if (t0 === null) t0 = now;
+      const p = Math.min(1, Math.max(0, (now - t0) / dur));
       const e = 1 - Math.pow(1 - p, 3);
       el.textContent = Math.round(from + (to - from) * e);
       if (p < 1) requestAnimationFrame(f);
-    })(t0);
+    });
   }
   function playSceneSfx(i) {
     (SCENE_SFX[i] || []).forEach(([ms, fn]) => sfxTimers.push(setTimeout(fn, ms)));
@@ -857,7 +863,7 @@ const SFX = (() => {
     scenes.forEach((s, j) => { s.classList.toggle('on', j === i); if (j !== i) s.classList.remove('off'); });
     sceneStart = performance.now();
     playSceneSfx(i);
-    if (i === 5) setTimeout(animateCounter, 1000);
+    if (i === 5) { resetCounter(); setTimeout(animateCounter, 1000); }
     if (i === scenes.length - 1) sfxTimers.push(setTimeout(() => Music.stop(3.2), Math.max(0, durations[i] - 3200)));
     timer = setTimeout(next, durations[i]);
   }
