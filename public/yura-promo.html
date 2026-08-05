@@ -44,7 +44,7 @@
   .scene {
     position: absolute; inset: 0;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    text-align: center; padding: 5vmin;
+    text-align: center; padding: 5vmin 5vmin calc(5vmin + 42px); /* deja libre la franja del HUD */
     opacity: 0; visibility: hidden;
     transition: opacity .9s cubic-bezier(.22,1,.36,1);
   }
@@ -67,6 +67,7 @@
   }
   h1.big { font-weight: 800; letter-spacing: -.035em; line-height: 1.06; font-size: clamp(30px,7vmin,84px); }
   h1.huge { font-weight: 800; letter-spacing: -.04em; line-height: 1.02; font-size: clamp(38px,9.5vmin,118px); }
+  .s1Title { text-align: left; max-width: 12ch; }
   .sub { font-weight: 400; color: rgba(255,255,255,.72); font-size: clamp(17px,3.2vmin,27px); margin-top: 2.5vmin; max-width: 52ch; line-height: 1.5; }
   .accent { color: var(--teal-glow); }
   .strike { position: relative; white-space: nowrap; }
@@ -264,6 +265,52 @@
     animation-play-state: paused !important;
   }
 
+  /* ═══ MÓVIL — el promo va dentro de un marco de ~350px: todo debe caber sin
+         recortarse, porque el iframe no tiene scroll ═══ */
+  @media (max-width: 560px) {
+    .scene { padding: 16px 12px 46px; }
+    .sceneRow { gap: 10px; margin-top: 10px; }
+
+    h1.big { font-size: 22px; }
+    h1.huge { font-size: 27px; }
+    .s1Title { text-align: center; max-width: 100%; } /* si no, la frase tachada se sale */
+    .sub { font-size: 13.5px; margin-top: 10px; max-width: 32ch; line-height: 1.45; }
+    .eyebrow { font-size: 11px; margin-bottom: 8px; }
+
+    /* los personajes son SVG con ancho fijo: que se encojan con el marco */
+    .char { width: auto; height: auto; max-width: 100%; max-height: 22vh; }
+    /* la fila de tres estudiantes debe caber sin partirse */
+    .sceneRow:has(.charWrap:nth-child(3)) .char { max-width: 92px; }
+
+    .genCard { width: 94%; padding: 11px 13px; border-radius: 13px; }
+    .genHead { font-size: 10.5px; gap: 7px; margin-bottom: 8px; }
+    .typed { font-size: 10.5px; }
+    .genLine { height: 7px; margin: 7px 0; }
+
+    .rubricCard { width: 94%; padding: 10px 12px; border-radius: 12px; }
+    .rubricHead { font-size: 10.5px; margin-bottom: 6px; }
+    .rubricRow { padding: 4px 0; gap: 7px; }
+    .rCheck, .rName, .rNote { font-size: 11.5px; }
+    .rubricFoot { font-size: 10px; margin-top: 6px; }
+
+    .gScoreTag { font-size: 12px; padding: 2px 8px; }
+    .chip { font-size: 13px; padding: 8px 14px; }
+    .trio { gap: 8px; margin-top: 14px; }
+    .cta { font-size: 14px; padding: 11px 20px; margin-top: 16px; }
+    .madein { font-size: 9.5px; margin-top: 12px; letter-spacing: .12em; }
+
+    .mark { width: 86px; height: 86px; }
+    .wordmark { font-size: 42px; margin-top: 8px; }
+    .slogan { font-size: 12px; margin-top: 8px; }
+
+    .dotsGrid { width: 94%; gap: 3px; margin-top: 14px; }
+
+    #hud { bottom: 9px; gap: 7px; }
+    .btn { font-size: 10px; padding: 6px 12px; }
+    #soundGate { font-size: 10px; padding: 6px 11px; top: 9px; right: 9px; gap: 6px; }
+    #soundGate svg { width: 12px; height: 12px; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { animation-duration: .001s !important; animation-iteration-count: 1 !important; transition-duration: .001s !important; }
   }
@@ -323,7 +370,7 @@
           <g class="paper" style="--pd:1.5s; --px:-14px; --pr:-30deg"><rect x="40" y="50" width="30" height="40" rx="3" fill="#f2f5f8"/><line x1="46" y1="62" x2="64" y2="62" stroke="#b9c4cf" stroke-width="3"/><line x1="46" y1="70" x2="64" y2="70" stroke="#b9c4cf" stroke-width="3"/></g>
         </svg>
       </div>
-      <h1 class="big" style="text-align:left; max-width: 12ch;">
+      <h1 class="big s1Title">
         <span class="line"><span class="w" style="--d:.5s">Calificar&nbsp;</span><span class="w" style="--d:.65s">no</span></span>
         <span class="line"><span class="w" style="--d:.8s">debería</span></span>
         <span class="line"><span class="w strike" style="--d:1s">comerse tus noches.</span></span>
