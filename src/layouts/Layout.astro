@@ -11,25 +11,84 @@ interface Props {
 }
 
 const {
-	title = 'Yura · Planifica. Automatiza. Enseña',
+	title = 'Yura · Planificación microcurricular y PUD para docentes de EGB y BGU',
 	socialTitle = 'Yura · tu planificación microcurricular, en .docx',
 	description = 'Eliges el curso y marcas las semanas: Yura ya sabe cuáles te faltan. La micro del trimestre y los PUD de cada unidad, con destrezas, actividades y evaluación, listos en .docx. Para docentes de EGB y BGU en Ecuador.',
 } = Astro.props;
+
+const socialDescription =
+	'Marcas las semanas y Yura arma la planificación completa: destrezas, actividades y evaluación. La micro del trimestre y tus PUD, en .docx.';
+
+const site = Astro.site!;
+const canonical = new URL(Astro.url.pathname, site);
+const ogImage = new URL('/og.png', site);
+
+const jsonLd = {
+	'@context': 'https://schema.org',
+	'@type': 'SoftwareApplication',
+	name: 'Yura',
+	applicationCategory: 'EducationalApplication',
+	operatingSystem: 'Web',
+	inLanguage: 'es-EC',
+	url: site.href,
+	image: ogImage.href,
+	description,
+	audience: {
+		'@type': 'EducationalAudience',
+		educationalRole: 'teacher',
+		geographicArea: { '@type': 'Country', name: 'Ecuador' },
+	},
+	offers: [
+		{
+			'@type': 'Offer',
+			name: 'Explorar',
+			price: '0',
+			priceCurrency: 'USD',
+			description: 'Planificas una semana y el documento sale entero, sin cuenta y sin tarjeta.',
+		},
+		{
+			'@type': 'Offer',
+			name: 'Yura completo',
+			price: '5',
+			priceCurrency: 'USD',
+			description: 'La micro del trimestre y todos los PUD de las unidades del trimestre.',
+		},
+	],
+};
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="es-EC">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
 		<title>{title}</title>
 		<meta name="description" content={description} />
-		<meta property="og:title" content={socialTitle} />
-		<meta
-			property="og:description"
-			content="Marcas las semanas y Yura arma la planificación completa: destrezas, actividades y evaluación. La micro del trimestre y tus PUD, en .docx."
-		/>
+		<link rel="canonical" href={canonical.href} />
+		<meta name="robots" content="index, follow, max-image-preview:large" />
+		<meta name="theme-color" content="#0e1030" />
+		<meta name="author" content="Yura" />
+
 		<meta property="og:type" content="website" />
+		<meta property="og:site_name" content="Yura" />
+		<meta property="og:locale" content="es_EC" />
+		<meta property="og:url" content={canonical.href} />
+		<meta property="og:title" content={socialTitle} />
+		<meta property="og:description" content={socialDescription} />
+		<meta property="og:image" content={ogImage.href} />
+		<meta property="og:image:type" content="image/png" />
+		<meta property="og:image:width" content="1200" />
+		<meta property="og:image:height" content="630" />
+		<meta
+			property="og:image:alt"
+			content="Yura: la pantalla para elegir las semanas que cubre la planificación"
+		/>
+
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={socialTitle} />
+		<meta name="twitter:description" content={socialDescription} />
+		<meta name="twitter:image" content={ogImage.href} />
+
 		<meta name="generator" content={Astro.generator} />
 		<link rel="icon" type="image/svg+xml" href={favicon.src} />
 		<link rel="apple-touch-icon" href={favicon.src} />
@@ -39,6 +98,7 @@ const {
 			href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap"
 			rel="stylesheet"
 		/>
+		<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline />
 	</head>
 	<body>
 		<slot />
