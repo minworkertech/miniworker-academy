@@ -20,7 +20,7 @@ const columns = [
 	{
 		title: 'Producto',
 		links: [
-			{ label: 'Cómo funciona', href: '#demo' },
+			{ label: 'Así funciona', href: '#producto' },
 			{ label: 'Precios', href: '#precios' },
 			{ label: 'Preguntas frecuentes', href: '#faq' },
 		],
@@ -31,7 +31,7 @@ const columns = [
 <footer>
 	<div class="wrap ft">
 		<div class="cols">
-			<div>
+			<div class="brand-col">
 				<a class="logo" href="#top" style="margin-bottom:10px" aria-label="Yura">
 					<img
 						class="wordmark lema"
@@ -41,9 +41,9 @@ const columns = [
 						height={logo.height}
 					/>
 				</a>
-				<p style="font-size:14px;color:var(--muted-fg);max-width:36ch">
-					Un entorno de trabajo inteligente para docentes: tú pones tu materia, Yura arma los
-					talleres y califica.
+				<p style="font-size:14px;color:var(--muted-fg)">
+					El planificador de aula para docentes de EGB y BGU en Ecuador. Tu micro del trimestre y tus
+					PUD, listos en .docx.
 				</p>
 			</div>
 			{
@@ -77,6 +77,6 @@ const columns = [
 				}
 			</div>
 		</div>
-		<div class="cr">© {currentYear} Yura · hecho en LATAM, para docentes de LATAM.</div>
+		<div class="cr">© {currentYear} Yura · hecho en Ecuador, para docentes de EGB y BGU.</div>
 	</div>
 </footer>

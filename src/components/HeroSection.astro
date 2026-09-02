@@ -1,29 +1,26 @@
 ---
-import ProductMock from './ProductMock.astro';
 import Tick from './Tick.astro';
 import { CTA_HREF, CTA_LABEL } from '../data/cta';
 
-const guarantees = [
-	'Tus rúbricas, tus ponderaciones',
-	'Exportas a Moodle',
-	'En español, precio LATAM',
-];
+const guarantees = ['La micro del trimestre y tus PUD', 'Descargas en .docx'];
 ---
 
 <section class="brand hero" id="hero">
 	<span class="blob v"></span><span class="blob i"></span><span class="blob s"></span>
 	<div class="wrap two">
 		<div>
-			<span class="pill"><span class="dot"></span>Acceso anticipado · cualquier materia</span>
-			<h1>Tú pones tu materia. Yura arma los talleres y califica por ti.</h1>
+			<span class="pill"><span class="dot"></span>Acceso anticipado · EGB y BGU</span>
+			<h1>Recupera las horas que se te van planificando.</h1>
 			<p class="sub">
-				Le das tu planificación y tus rúbricas, y Yura genera los talleres y evalúa cada entrega con
-				IA —de cualquier materia y siguiendo tus formatos. <b>Recuperas tus noches</b>; tus
-				estudiantes reciben feedback real.
+				Eliges el curso y marcas las semanas: <b>Yura ya sabe cuáles te faltan</b>. Le dices el tema
+				y sale la planificación completa —destrezas, indicadores, actividades y evaluación— lista
+				para descargar en .docx.
 			</p>
 			<div class="cta">
 				<a class="btn primary" href={CTA_HREF} data-cta="hero">{CTA_LABEL}</a>
-				<p class="micro">Gratis para los primeros cursos<span class="sep">·</span>Sin tarjeta</p>
+				<p class="micro">
+					Sin tarjeta<span class="sep">·</span>Te avisamos del lanzamiento
+				</p>
 			</div>
 			<div class="under">
 				{
@@ -37,8 +34,26 @@ const guarantees = [
 			</div>
 		</div>
 		<div>
-			<ProductMock />
+			<img
+				class="shot"
+				src="/producto/semanas.webp"
+				alt="Selección de las semanas que cubre la unidad, con las que faltan ya marcadas"
+				width="1300"
+				height="1179"
+				loading="eager"
+			/>
 			<p class="caption" style="color:rgba(233,238,255,.5)">vista de ejemplo del producto</p>
 		</div>
 	</div>
 </section>
+
+<style>
+	.shot {
+		width: 100%;
+		height: auto;
+		margin-top: 34px;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-xl);
+		box-shadow: var(--shadow-lg);
+	}
+</style>

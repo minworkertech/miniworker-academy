@@ -1,102 +1,83 @@
 ---
 import Tick from './Tick.astro';
-import { billingOptions, billingPrices } from '../data/pricing';
-import { CTA_HREF } from '../data/cta';
-
-const initial = billingPrices.m;
+import { plans, earlyOffer } from '../data/pricing';
+import { CTA_HREF, CTA_LABEL } from '../data/cta';
 ---
 
-<section class="sec sec-tint" id="precios">
+<section class="sec" id="precios">
 	<div class="wrap">
-		<span class="eyebrow">Precios · acceso anticipado</span>
-		<h2 class="t">Empieza gratis. El plan de pago cuesta menos que el domingo que recuperas.</h2>
-		<p class="lead">
-			Hoy estamos en acceso anticipado: los primeros cursos entran gratis. Los planes de pago están
-			aquí para que sepas a dónde va esto.
-		</p>
-		<div class="toggle" role="group" aria-label="Periodo de facturación">
+		<span class="eyebrow">Precios</span>
+		<h2 class="t">Lo que es gratis y lo que se paga.</h2>
+		<p class="offer"><Tick /><span>{earlyOffer}</span></p>
+		<div class="plans">
 			{
-				billingOptions.map((option, index) => (
-					<button type="button" data-bill={option.key} aria-pressed={index === 0 ? 'true' : 'false'}>
-						{option.label}
-					</button>
+				plans.map((plan) => (
+					<div class:list={['plan', plan.highlight && 'hi']}>
+						{plan.highlight && <span class="ribbon">Empieza aquí</span>}
+						<div class="nm">{plan.name}</div>
+						<div class="pr">
+							<span class="v">{plan.price}</span>
+							<span class="u">· {plan.priceNote}</span>
+						</div>
+						<div class="alt">{plan.alt}</div>
+						<p class="who">{plan.audience}</p>
+						<ul>
+							{plan.features.map((feature) => (
+								<li>
+									<Tick />
+									<span set:html={feature} />
+								</li>
+							))}
+						</ul>
+					</div>
 				))
 			}
 		</div>
-		<div class="plans">
-			<div class="plan hi">
-				<span class="ribbon">Empieza aquí</span>
-				<div class="nm">Free · acceso anticipado</div>
-				<div class="pr"><span class="v">$0</span><span class="u">· sin tarjeta</span></div>
-				<div class="alt">gratis para los primeros cursos</div>
-				<ul>
-					<li><Tick /><span>Un <b>curso real</b> este semestre</span></li>
-					<li><Tick /><span>Talleres generados desde tu plan</span></li>
-					<li><Tick /><span>Calificación con feedback</span></li>
-					<li><Tick /><span>Acompañamiento directo del equipo</span></li>
-				</ul>
-				<a class="btn primary" href={CTA_HREF} data-cta="precios-free">Empezar gratis</a>
-			</div>
-			<div class="plan">
-				<div class="nm">Basic</div>
-				<div class="pr">
-					<span class="v" data-price="basic">{initial.basic}</span><span class="u">/mes</span>
-				</div>
-				<div class="alt" data-alt="basic">{initial.altBasic}</div>
-				<ul>
-					<li><Tick /><span><b>Varios cursos</b></span></li>
-					<li><Tick /><span>Dashboard completo</span></li>
-					<li><Tick /><span>Export a Moodle con tus ponderaciones</span></li>
-					<li><Tick /><span>Sin contrato anual</span></li>
-				</ul>
-				<a class="btn outline" href={CTA_HREF} data-cta="precios-basic">Empezar gratis</a>
-			</div>
-			<div class="plan">
-				<div class="nm">Pro Plus</div>
-				<div class="pr">
-					<span class="v" data-price="pro">{initial.pro}</span><span class="u">/mes</span>
-				</div>
-				<div class="alt" data-alt="pro">{initial.altPro}</div>
-				<ul>
-					<li><Tick /><span>Todo lo de <b>Basic</b></span></li>
-					<li><Tick /><span>IA de calificación y constructor de talleres</span></li>
-					<li><Tick /><span>Cursos y estudiantes <b>ilimitados</b></span></li>
-				</ul>
-				<a class="btn outline" href={CTA_HREF} data-cta="precios-pro">Empezar gratis</a>
-			</div>
+		<div class="demo-cta">
+			<a class="btn primary" href={CTA_HREF} data-cta="precios">{CTA_LABEL}</a>
+			<p class="micro">Sin tarjeta<span class="sep">·</span>Te avisamos del lanzamiento</p>
 		</div>
-		<p class="guarantee">
-			<Tick /><span>
-				Prueba un curso real este semestre, gratis. Si no te ahorra tiempo, no pagas nada.
+
+		<div class="engine">
+			<b>¿Eres vicerrectorado o coordinación?</b>
+			<span>
+				Cuentas para todo el colegio, los formatos cargados una sola vez y un panel de quién
+				entregó.{' '}
+				<a href={CTA_HREF} data-cta="precios-institucion">Escríbenos</a> y lo vemos contigo.
 			</span>
-		</p>
+		</div>
 	</div>
 </section>
 
-<script>
-	import { billingPrices, type BillingPeriod } from '../data/pricing';
-	import { track } from '../scripts/track';
+<style>
+	/* esta sección va a todo el ancho del contenedor */
+	.offer,
+	.plans {
+		max-width: none;
+	}
 
-	const buttons = document.querySelectorAll<HTMLButtonElement>('.toggle button');
-	const priceBasic = document.querySelector<HTMLElement>('[data-price="basic"]');
-	const pricePro = document.querySelector<HTMLElement>('[data-price="pro"]');
-	const altBasic = document.querySelector<HTMLElement>('[data-alt="basic"]');
-	const altPro = document.querySelector<HTMLElement>('[data-alt="pro"]');
+	.offer {
+		margin-top: 22px;
+		padding: 16px 18px;
+		border-radius: var(--radius-lg);
+		background: var(--teal-50);
+		border: 1px solid var(--teal-200);
+		font-size: 15px;
+		font-weight: 500;
+		display: flex;
+		gap: 11px;
+		align-items: flex-start;
+	}
 
-	buttons.forEach((button) => {
-		button.addEventListener('click', () => {
-			buttons.forEach((other) => other.setAttribute('aria-pressed', String(other === button)));
+	.plan .who {
+		font-size: 13.5px;
+		color: var(--muted-fg);
+		margin-top: 12px;
+	}
 
-			const period = button.dataset.bill as BillingPeriod;
-			const prices = billingPrices[period];
-			if (!prices) return;
-
-			if (priceBasic) priceBasic.textContent = prices.basic;
-			if (pricePro) pricePro.textContent = prices.pro;
-			if (altBasic) altBasic.textContent = prices.altBasic;
-			if (altPro) altPro.textContent = prices.altPro;
-
-			track('precio_periodo', { periodo: period });
-		});
-	});
-</script>
+	@media (min-width: 760px) {
+		.plans {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+</style>

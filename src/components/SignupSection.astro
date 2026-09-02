@@ -1,12 +1,8 @@
 ---
 import Tick from './Tick.astro';
-import { CTA_LABEL } from '../data/cta';
-import { subjectSuggestions } from '../data/subjects';
-
 const checks = [
-	'Cargas tu sílabo y tus rúbricas y armamos tu primer taller contigo',
-	'Si enseñas programación, entras al piloto que ya está corriendo',
-	'Si enseñas otra materia, tu registro decide cuál construimos primero',
+	'Te escribimos el día del lanzamiento, sin llenarte la bandeja',
+	'Los 5 primeros se llevan su primer trimestre completo gratis',
 ];
 ---
 
@@ -14,13 +10,9 @@ const checks = [
 	<span class="blob v"></span><span class="blob i"></span><span class="blob s"></span>
 	<div class="wrap two">
 		<div>
-			<span class="eyebrow">Crear cuenta</span>
-			<h2 class="t">Crear tu cuenta es pedir el acceso.</h2>
-			<p class="lead">
-				Un solo funnel: creas la cuenta, nos cuentas qué materia enseñas y abrimos tu curso en el
-				acceso anticipado. Sin tarjeta y sin llamada de ventas.
-			</p>
-			<ul class="checks" style="margin-top:24px">
+			<span class="eyebrow">Lanzamiento</span>
+			<h2 class="t">Regístrate para el lanzamiento.</h2>
+			<ul class="checks" style="margin-top:22px">
 				{
 					checks.map((check) => (
 						<li>
@@ -40,67 +32,71 @@ const checks = [
 						type="email"
 						id="su-email"
 						name="email"
-						placeholder="tu.nombre@universidad.edu"
+						placeholder="tu.nombre@correo.com"
 						autocomplete="email"
 						required
 					/>
 				</div>
 				<div class="field hideOnSent">
-					<label for="su-materia">¿Qué materia enseñas?</label>
-					<input
-						class="inp"
-						type="text"
+					<label for="su-materia">
+						Mensaje <span class="opt">· opcional</span>
+					</label>
+					<textarea
+						class="inp area"
 						id="su-materia"
 						name="subject"
-						list="materias"
-						placeholder="derecho penal, cálculo, marketing…"
-						autocomplete="off"
-						required
-					/>
-					<datalist id="materias">
-						{subjectSuggestions.map((item) => <option value={item} />)}
-					</datalist>
-					<p class="hint hideOnSent">Con esto decidimos qué materia construimos primero.</p>
+						placeholder="qué enseñas, en qué nivel, o lo que necesites contarnos…"
+						rows="3"></textarea>
 				</div>
-				<p class="err" id="signupErr">Revisa tu correo y cuéntanos qué materia enseñas.</p>
-				<button class="btn onDark block hideOnSent" type="submit" id="signupSubmit">
-					{CTA_LABEL}
-				</button>
-				<p
-					class="micro hideOnSent"
-					style="color:rgba(233,238,255,.6);text-align:center"
-				>
-					Sin tarjeta<span class="sep">·</span>En español<span class="sep">·</span>Gratis para los
-					primeros cursos
+				<p class="err" id="signupErr">Escribe un correo válido.</p>
+				<button class="btn onDark block hideOnSent" type="submit" id="signupSubmit">Enviar</button>
+				<p class="micro hideOnSent" style="color:rgba(233,238,255,.6);text-align:center">
+					Sin tarjeta<span class="sep">·</span>En español<span class="sep">·</span>Sin llamada de
+					ventas
 				</p>
 				<p class="ok">
-					<Tick />Listo. Te escribimos a tu correo con el acceso y los siguientes pasos.
+					<Tick />Listo. Te escribimos a tu correo el día del lanzamiento.
 				</p>
 			</form>
 		</div>
 	</div>
 </section>
 
+<style>
+	.opt {
+		font-weight: 500;
+		color: rgba(233, 238, 255, 0.45);
+	}
+
+	.area {
+		height: auto;
+		padding: 12px 14px;
+		line-height: 1.5;
+		resize: vertical;
+		font-family: var(--font-sans);
+	}
+</style>
+
 <script>
 	import { isEmail, submitToSheet } from '../scripts/waitlist';
 	import { track } from '../scripts/track';
-	import { CTA_LABEL } from '../data/cta';
 
 	const form = document.getElementById('signupForm') as HTMLFormElement | null;
 	const emailInput = document.getElementById('su-email') as HTMLInputElement | null;
-	const subjectInput = document.getElementById('su-materia') as HTMLInputElement | null;
+	const subjectInput = document.getElementById('su-materia') as HTMLTextAreaElement | null;
 	const submitBtn = document.getElementById('signupSubmit') as HTMLButtonElement | null;
 	const errorText = document.getElementById('signupErr');
 
 	form?.addEventListener('submit', async (event) => {
 		event.preventDefault();
-		if (!emailInput || !subjectInput) return;
+		if (!emailInput) return;
 
 		const email = emailInput.value.trim();
-		const subject = subjectInput.value.trim();
+		// el mensaje es opcional: solo el correo bloquea el envío
+		const subject = subjectInput?.value.trim() ?? '';
 
-		if (!isEmail(email) || subject.length < 2) {
-			if (errorText) errorText.textContent = 'Revisa tu correo y cuéntanos qué materia enseñas.';
+		if (!isEmail(email)) {
+			if (errorText) errorText.textContent = 'Escribe un correo válido.';
 			form.classList.add('invalid');
 			return;
 		}
@@ -123,7 +119,7 @@ const checks = [
 		} finally {
 			if (submitBtn) {
 				submitBtn.disabled = false;
-				submitBtn.textContent = CTA_LABEL;
+				submitBtn.textContent = 'Enviar';
 			}
 		}
 	});

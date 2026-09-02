@@ -5,7 +5,7 @@ import { faq } from '../data/faq';
 <section class="sec sec-tint" id="faq">
 	<div class="wrap">
 		<span class="eyebrow">Preguntas</span>
-		<h2 class="t">Lo que preguntan todos los docentes.</h2>
+		<h2 class="t">Lo que preguntan todos.</h2>
 		<div class="faq">
 			{
 				faq.map((item) => (
@@ -18,3 +18,10 @@ import { faq } from '../data/faq';
 		</div>
 	</div>
 </section>
+
+<style>
+	/* las respuestas van a todo el ancho de la sección */
+	details p {
+		max-width: none;
+	}
+</style>

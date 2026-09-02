@@ -1,36 +1,45 @@
-export type BillingPeriod = 'm' | 's' | 'a';
+/** Sin registro se explora; el trimestre completo se paga una vez, sin suscripción. */
 
-/** Precios y textos alternativos por periodo de facturación (los cambia el toggle). */
-export const billingOptions: { key: BillingPeriod; label: string }[] = [
-	{ key: 'm', label: 'Mensual' },
-	{ key: 's', label: 'Semestral' },
-	{ key: 'a', label: 'Anual' },
-];
-
-export interface BillingPrices {
-	basic: string;
-	pro: string;
-	altBasic: string;
-	altPro: string;
+export interface Plan {
+	name: string;
+	price: string;
+	priceNote: string;
+	alt: string;
+	audience: string;
+	/** Admite <b> inline (se renderiza con set:html). */
+	features: string[];
+	highlight?: boolean;
 }
 
-export const billingPrices: Record<BillingPeriod, BillingPrices> = {
-	m: {
-		basic: '$20',
-		pro: '$35',
-		altBasic: 'o $18/mes semestral · $16/mes anual',
-		altPro: 'o $31/mes semestral · $28/mes anual',
+export const plans: Plan[] = [
+	{
+		name: 'Explorar',
+		price: '$0',
+		priceNote: 'sin registro',
+		alt: 'sin cuenta y sin tarjeta',
+		audience: 'Para ver cómo trabaja Yura antes de decidir nada.',
+		features: [
+			'Planificas <b>una semana</b> y el documento sale entero',
+			'Algunos bloques del currículo, para probar con lo tuyo',
+			'Edición celda a celda y exportación a Word y PDF',
+			'Entras y planificas: no hay que crear cuenta',
+		],
 	},
-	s: {
-		basic: '$18',
-		pro: '$31',
-		altBasic: 'facturado por semestre · $20/mes mensual',
-		altPro: 'facturado por semestre · $35/mes mensual',
+	{
+		name: 'Yura completo',
+		price: '$5',
+		priceNote: 'por trimestre',
+		alt: 'pago por trimestre',
+		audience: 'Para armar de verdad lo que tienes que entregar.',
+		features: [
+			'La <b>micro del trimestre</b>: las 12 semanas, una vez por curso',
+			'Todos los <b>PUD</b> de las unidades que entren en el trimestre',
+			'El currículo completo de tu área y tu nivel, no una muestra',
+			'Pagas solo el trimestre que usas: <b>sin renovación automática</b>',
+		],
+		highlight: true,
 	},
-	a: {
-		basic: '$16',
-		pro: '$28',
-		altBasic: 'facturado por año · $20/mes mensual',
-		altPro: 'facturado por año · $35/mes mensual',
-	},
-};
+];
+
+export const earlyOffer =
+	'Los 5 primeros docentes que se registren se llevan su primer trimestre completo gratis, sin tarjeta.';
