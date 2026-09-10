@@ -9,26 +9,91 @@ import SignupSection from '../components/SignupSection.astro';
 import FaqSection from '../components/FaqSection.astro';
 import Footer from '../components/Footer.astro';
 import StickyCta from '../components/StickyCta.astro';
+import WhatsappFab from '../components/WhatsappFab.astro';
+import LabsHero from '../components/labs/LabsHero.astro';
+import ResetSection from '../components/labs/ResetSection.astro';
+import ContinuitySection from '../components/labs/ContinuitySection.astro';
+import PeriodSection from '../components/labs/PeriodSection.astro';
+import StatusSection from '../components/labs/StatusSection.astro';
+import PilotSignup from '../components/labs/PilotSignup.astro';
+import { CTA_HREF, CTA_LABEL, LABS_CTA_HREF, LABS_CTA_LABEL } from '../data/cta';
+
+const currentYear = new Date().getFullYear();
+
+const labsColumns = [
+	{
+		title: 'El modelo',
+		links: [
+			{ label: 'Un producto que no vuelve a cero', href: '#labs-continuidad' },
+			{ label: 'Un período con Yura', href: '#labs-periodo' },
+			{ label: 'Qué existe hoy', href: '#labs-estado' },
+		],
+	},
+];
 ---
 
 <Layout>
 	<Header />
 
-	<main id="top">
-		<HeroSection />
-		<ProblemSection />
-		<DemoSection />
-		<PricingSection />
-		<FaqSection />
-		<SignupSection />
-	</main>
+	<div class="panel" data-panel="docentes">
+		<main id="top">
+			<HeroSection />
+			<ProblemSection />
+			<DemoSection />
+			<PricingSection />
+			<FaqSection />
+			<SignupSection />
+		</main>
 
-	<Footer />
-	<StickyCta />
+		<Footer />
+		<StickyCta
+			href={CTA_HREF}
+			label={CTA_LABEL}
+			note="Sin tarjeta · Te avisamos del lanzamiento"
+			hero="#hero"
+			signup="#crear-cuenta"
+			source="sticky"
+		/>
+		<WhatsappFab
+			message="Hola, quiero saber más de Yura para mi planificación."
+			source="wa-docentes"
+		/>
+	</div>
+
+	<div class="panel" data-panel="labs" hidden>
+		<main id="labs-top">
+			<LabsHero />
+			<ResetSection />
+			<ContinuitySection />
+			<PeriodSection />
+			<StatusSection />
+			<PilotSignup />
+		</main>
+
+		<Footer
+			columns={labsColumns}
+			note={`© ${currentYear} Yura`}
+		/>
+		<StickyCta
+			href={LABS_CTA_HREF}
+			label={LABS_CTA_LABEL}
+			note="Una asignatura, un período"
+			hero="#labs-hero"
+			signup="#labs-piloto"
+			source="labs-sticky"
+		/>
+		<WhatsappFab
+			message="Hola, somos una institución y queremos ver el piloto de Yura."
+			source="wa-labs"
+		/>
+	</div>
 </Layout>
 
 <script>
 	import { track } from '../scripts/track';
+	import { initReveal } from '../scripts/reveal';
+
+	initReveal();
 
 	document.querySelectorAll<HTMLElement>('[data-cta]').forEach((element) => {
 		element.addEventListener('click', () => {

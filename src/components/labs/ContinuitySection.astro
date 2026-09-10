@@ -1,0 +1,270 @@
+---
+import { maturity, flatMaturity, handoff } from '../../data/labs';
+
+/**
+ * Seis períodos consecutivos. El centro de cada columna cae exactamente en
+ * (i + 0.5) / 6, así que la polilínea del SVG y los círculos en CSS usan la
+ * misma coordenada y no se desalinean a ningún ancho.
+ */
+const periods = maturity.map((value, index) => ({
+	label: `P${index + 1}`,
+	value,
+	x: ((index + 0.5) * 100) / maturity.length,
+	y: 100 - value,
+	/** Las barras crecen en cascada; el círculo del traspaso llega después. */
+	bar: index * 70,
+	node: index * 70 + 520,
+}));
+
+const polyline = periods.map((period) => `${period.x.toFixed(3)},${period.y.toFixed(3)}`).join(' ');
+---
+
+<section class="sec sec-tint" id="labs-continuidad">
+	<div class="wrap">
+		<span class="eyebrow" data-reveal>El modelo</span>
+		<h2 class="t" data-reveal style="--rd:60ms">Un producto que no vuelve a cero.</h2>
+		<p class="lead" data-reveal style="--rd:120ms">
+			El mismo esfuerzo de seis cohortes, con una regla distinta al cierre: en lugar de archivar,
+			<b>se traspasa</b>.
+		</p>
+
+		<figure class="chart" data-reveal>
+			<div class="lane">
+				<div class="lane-hd">
+					<span class="k">El modelo actual</span>
+					<span class="v">seis productos, cero acumulado</span>
+				</div>
+				<div class="plot">
+					<div class="bars">
+						{
+							periods.map((period) => (
+								<span class="bar flat" style={`--h:${flatMaturity}%;--bd:${period.bar}ms`} />
+							))
+						}
+					</div>
+				</div>
+			</div>
+
+			<div class="lane">
+				<div class="lane-hd">
+					<span class="k on">Con Yura</span>
+					<span class="v">un producto, seis generaciones</span>
+				</div>
+				<div class="plot">
+					<div class="bars">
+						{
+							periods.map((period) => (
+								<span class="bar grow" style={`--h:${period.value}%;--bd:${period.bar}ms`} />
+							))
+						}
+					</div>
+					<svg class="link" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+						<polyline points={polyline} pathLength="100" vector-effect="non-scaling-stroke" />
+					</svg>
+					<div class="nodes">
+						{
+							periods.map((period) => (
+								<span
+									class="node"
+									style={`left:${period.x}%;bottom:${period.value}%;--nd:${period.node}ms`}
+								/>
+							))
+						}
+					</div>
+				</div>
+			</div>
+
+			<div class="axis">{periods.map((period) => <span>{period.label}</span>)}</div>
+
+			<figcaption class="caption">
+				Cada círculo es un traspaso de equipo. La altura es el esquema del modelo, no una medición.
+			</figcaption>
+		</figure>
+
+		<div class="grid2 handoff">
+			{
+				handoff.map((item, index) => (
+					<div class="card" data-reveal style={`--rd:${index * 90}ms`}>
+						<h3>{item.title}</h3>
+						<p>{item.body}</p>
+					</div>
+				))
+			}
+		</div>
+	</div>
+</section>
+
+<style>
+	.chart {
+		margin: 30px 0 0;
+		padding: 20px 16px 16px;
+		border: 1px solid var(--border);
+		border-radius: var(--radius-xl);
+		background: var(--card);
+		box-shadow: var(--shadow-sm);
+	}
+
+	.lane + .lane {
+		margin-top: 22px;
+		padding-top: 22px;
+		border-top: 1px solid var(--border-soft);
+	}
+
+	.lane-hd {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		gap: 4px 10px;
+		margin-bottom: 12px;
+	}
+
+	.lane-hd .k {
+		font: 600 13px/1.3 var(--font-sans);
+		color: var(--fg);
+	}
+
+	.lane-hd .k.on {
+		color: var(--teal-deep);
+	}
+
+	.lane-hd .v {
+		font: 500 11.5px/1.3 var(--font-mono);
+		color: var(--muted-fg);
+	}
+
+	.plot {
+		position: relative;
+		height: 92px;
+	}
+
+	.bars,
+	.axis {
+		display: grid;
+		grid-template-columns: repeat(6, 1fr);
+	}
+
+	.bars {
+		height: 100%;
+		align-items: end;
+	}
+
+	.bar {
+		display: block;
+		height: var(--h);
+		width: 56%;
+		max-width: 72px;
+		justify-self: center;
+		border-radius: 5px 5px 2px 2px;
+	}
+
+	.bar.flat {
+		background: #cddde1;
+	}
+
+	.bar.grow {
+		background: linear-gradient(180deg, var(--teal) 0%, var(--teal-300) 100%);
+	}
+
+	/* la línea de traspasos pasa por el tope de cada barra */
+	.link {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		overflow: visible;
+		pointer-events: none;
+	}
+
+	.link polyline {
+		fill: none;
+		stroke: var(--violet);
+		stroke-width: 2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+
+	.nodes {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+
+	.node {
+		position: absolute;
+		width: 11px;
+		height: 11px;
+		border-radius: 999px;
+		background: var(--card);
+		border: 2px solid var(--violet);
+		transform: translate(-50%, 50%);
+	}
+
+	.axis {
+		margin-top: 9px;
+		font: 600 11px/1 var(--font-mono);
+		color: var(--muted-fg);
+		text-align: center;
+	}
+
+	.chart .caption {
+		margin-top: 14px;
+		text-align: left;
+		max-width: 70ch;
+		font-size: 11.5px;
+		line-height: 1.65;
+	}
+
+	.handoff {
+		margin-top: 22px;
+	}
+
+	/* El gráfico se dibuja al entrar: barras en cascada, después la línea de
+	   traspasos y los círculos. `.rv` solo existe si el script corrió y el
+	   sistema no pidió menos movimiento. */
+	.chart.rv .bar {
+		transform: scaleY(0);
+		transform-origin: bottom;
+		transition: transform 720ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--bd, 0ms);
+	}
+
+	.chart.rv.in .bar {
+		transform: scaleY(1);
+	}
+
+	.chart.rv .link polyline {
+		stroke-dasharray: 100;
+		stroke-dashoffset: 100;
+		transition: stroke-dashoffset 900ms ease 420ms;
+	}
+
+	.chart.rv.in .link polyline {
+		stroke-dashoffset: 0;
+	}
+
+	.chart.rv .node {
+		opacity: 0;
+		transform: translate(-50%, 50%) scale(0.3);
+		transition:
+			opacity 260ms ease var(--nd, 0ms),
+			transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1) var(--nd, 0ms);
+	}
+
+	.chart.rv.in .node {
+		opacity: 1;
+		transform: translate(-50%, 50%) scale(1);
+	}
+
+	@media (min-width: 760px) {
+		.chart {
+			padding: 24px 22px 18px;
+		}
+
+		.plot {
+			height: 128px;
+		}
+
+		.grid2.handoff {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+</style>

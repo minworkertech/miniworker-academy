@@ -1,0 +1,184 @@
+---
+import Tick from '../Tick.astro';
+import { pilotChecks } from '../../data/labs';
+---
+
+<section class="brand sec" id="labs-piloto">
+	<span class="blob v"></span><span class="blob i"></span><span class="blob s"></span>
+	<div class="wrap two">
+		<div>
+			<span class="eyebrow" data-reveal>Empezar</span>
+			<h2 class="t" data-reveal style="--rd:60ms">Un período, una asignatura, un producto.</h2>
+			<p class="lead" data-reveal style="--rd:120ms">
+				No pide reformar la malla. Toma una asignatura que ya existe y le cambia
+				la regla de cierre.
+			</p>
+			<ul class="checks" style="margin-top:22px">
+				{
+					pilotChecks.map((check, index) => (
+						<li data-reveal style={`--rd:${180 + index * 70}ms`}>
+							<Tick />
+							<span style="color:rgba(233,238,255,.78)">{check}</span>
+						</li>
+					))
+				}
+			</ul>
+			<p class="micro" data-reveal style="color:rgba(233,238,255,.6);margin-top:18px">
+				Acordamos por escrito qué se hace, con qué calendario y qué contará como resultado.
+			</p>
+		</div>
+
+		<div class="signup" data-reveal style="--rd:120ms">
+			<form class="form" id="pilotForm" method="post" novalidate>
+				<div class="field hideOnSent">
+					<label for="pi-institucion">Institución</label>
+					<input
+						class="inp"
+						type="text"
+						id="pi-institucion"
+						name="institucion"
+						placeholder="Universidad o instituto"
+						autocomplete="organization"
+						required
+					/>
+				</div>
+				<div class="row2 hideOnSent">
+					<div class="field">
+						<label for="pi-nombre">Nombre</label>
+						<input
+							class="inp"
+							type="text"
+							id="pi-nombre"
+							name="nombre"
+							placeholder="Tu nombre"
+							autocomplete="name"
+							required
+						/>
+					</div>
+					<div class="field">
+						<label for="pi-cargo">Cargo <span class="opt">· opcional</span></label>
+						<input
+							class="inp"
+							type="text"
+							id="pi-cargo"
+							name="cargo"
+							placeholder="Docente, coordinación…"
+							autocomplete="organization-title"
+						/>
+					</div>
+				</div>
+				<div class="field hideOnSent">
+					<label for="pi-carrera">Carrera o asignatura <span class="opt">· opcional</span></label>
+					<input
+						class="inp"
+						type="text"
+						id="pi-carrera"
+						name="carrera"
+						placeholder="Software, proyecto integrador…"
+					/>
+				</div>
+				<div class="field hideOnSent">
+					<label for="pi-email">Correo</label>
+					<input
+						class="inp"
+						type="email"
+						id="pi-email"
+						name="email"
+						placeholder="tu.nombre@institucion.edu.ec"
+						autocomplete="email"
+						required
+					/>
+				</div>
+				<p class="err" id="pilotErr">Completa institución, nombre y un correo válido.</p>
+				<button class="btn onDark block hideOnSent" type="submit" id="pilotSubmit">
+					Conversemos el alcance
+				</button>
+				<p class="micro hideOnSent" style="color:rgba(233,238,255,.6);text-align:center">
+					Sin compromiso<span class="sep"></span>
+				</p>
+				<p class="ok">
+					<Tick />¡Listo! Te escribimos para agendar la conversación.
+				</p>
+			</form>
+		</div>
+	</div>
+</section>
+
+<style>
+	.opt {
+		font-weight: 500;
+		color: rgba(233, 238, 255, 0.45);
+	}
+
+	.row2 {
+		display: grid;
+		gap: 12px;
+	}
+
+	@media (min-width: 520px) {
+		.row2 {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+</style>
+
+<script>
+	import { isEmail, submitToSheet } from '../../scripts/waitlist';
+	import { track } from '../../scripts/track';
+
+	const form = document.getElementById('pilotForm') as HTMLFormElement | null;
+	const submitBtn = document.getElementById('pilotSubmit') as HTMLButtonElement | null;
+	const errorText = document.getElementById('pilotErr');
+
+	const value = (id: string) =>
+		(document.getElementById(id) as HTMLInputElement | null)?.value.trim() ?? '';
+
+	form?.addEventListener('submit', async (event) => {
+		event.preventDefault();
+
+		const institucion = value('pi-institucion');
+		const nombre = value('pi-nombre');
+		const cargo = value('pi-cargo');
+		const carrera = value('pi-carrera');
+		const email = value('pi-email');
+
+		if (!institucion || !nombre || !isEmail(email)) {
+			if (errorText) errorText.textContent = 'Completa institución, nombre y un correo válido.';
+			form.classList.add('invalid');
+			return;
+		}
+
+		// La hoja solo tiene columnas Email y Subject: el resto viaja en una
+		// sola línea dentro de Subject para no romper GOOGLE_SHEETS_SETUP.md.
+		const subject = [
+			`Institución: ${institucion}`,
+			carrera && `Carrera: ${carrera}`,
+			`Nombre: ${nombre}`,
+			cargo && `Cargo: ${cargo}`,
+		]
+			.filter(Boolean)
+			.join(' · ');
+
+		form.classList.remove('invalid');
+		if (submitBtn) {
+			submitBtn.disabled = true;
+			submitBtn.textContent = 'Enviando…';
+		}
+
+		try {
+			await submitToSheet({ email, subject });
+			track('signup_piloto_institucion', { institucion: institucion.toLowerCase() });
+			form.classList.add('sent');
+		} catch {
+			if (errorText) {
+				errorText.textContent = 'No pudimos guardar tu registro. Inténtalo de nuevo.';
+			}
+			form.classList.add('invalid');
+		} finally {
+			if (submitBtn) {
+				submitBtn.disabled = false;
+				submitBtn.textContent = 'Conversemos el alcance';
+			}
+		}
+	});
+</script>

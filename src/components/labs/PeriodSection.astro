@@ -1,0 +1,86 @@
+---
+import { periodSteps, audiences } from '../../data/labs';
+---
+
+<section class="sec" id="labs-periodo">
+	<div class="wrap">
+		<span class="eyebrow" data-reveal>Un período con Yura</span>
+		<h2 class="t" data-reveal style="--rd:60ms">Lo que cambia en la operación diaria.</h2>
+		<p class="lead" data-reveal style="--rd:120ms">
+			Da igual el tipo de institución o la duración del período: basta con que exista una asignatura
+			donde se construya en equipo.
+		</p>
+
+		<div class="steps">
+			{
+				periodSteps.map((step, index) => (
+					<div class="step" data-reveal style={`--rd:${index * 110}ms`}>
+						<div class="step-hd">
+							<div class="num">{index + 1}</div>
+							<span class="eyebrow">{step.label}</span>
+						</div>
+						<h3>{step.title}</h3>
+						<p set:html={step.body} />
+					</div>
+				))
+			}
+		</div>
+
+		<div class="whos">
+			{
+				audiences.map((audience, index) => (
+					<div class="who" data-reveal style={`--rd:${index * 70}ms`}>
+						<b>{audience.who}</b>
+						<span>{audience.what}</span>
+					</div>
+				))
+			}
+		</div>
+
+		<p class="infra" data-reveal>
+			<b>Nadie de esta lista cambia de herramienta:</b> el trabajo sigue ocurriendo donde ya ocurre.
+		</p>
+	</div>
+</section>
+
+<style>
+	.step-hd {
+		display: flex;
+		align-items: center;
+		gap: 11px;
+	}
+
+	.step h3 {
+		margin-top: 12px;
+	}
+
+	.whos {
+		margin-top: 30px;
+		border-top: 1px solid var(--border);
+	}
+
+	.who {
+		display: grid;
+		gap: 3px;
+		padding: 14px 0;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.who b {
+		font-size: 14px;
+		font-weight: 650;
+	}
+
+	.who span {
+		font-size: 14.5px;
+		color: var(--muted-fg);
+	}
+
+	@media (min-width: 760px) {
+		.who {
+			grid-template-columns: 150px 1fr;
+			gap: 0 20px;
+			align-items: baseline;
+		}
+	}
+</style>

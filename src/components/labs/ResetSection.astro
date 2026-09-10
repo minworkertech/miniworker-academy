@@ -1,0 +1,39 @@
+---
+import Icon from '../Icon.astro';
+import { labPains } from '../../data/labs';
+---
+
+<section class="sec" id="labs-reinicio">
+	<div class="wrap">
+		<span class="eyebrow" data-reveal>El reinicio de cada período</span>
+		<h2 class="t" data-reveal style="--rd:60ms">
+			Un período entero de trabajo que no deja nada en pie.
+		</h2>
+		<div class="pains trio">
+			{
+				labPains.map((pain, index) => (
+					<div class="pain" data-reveal style={`--rd:${120 + index * 90}ms`}>
+						<div class="h">
+							<Icon name={pain.icon} />
+							<h4>{pain.title}</h4>
+						</div>
+						<p>{pain.body}</p>
+					</div>
+				))
+			}
+		</div>
+		<div class="closer" data-reveal>
+			<strong>Y en el siguiente período se vuelve a empezar de cero.</strong>
+			<span>Con estudiantes distintos y el mismo resultado.</span>
+		</div>
+	</div>
+</section>
+
+<style>
+	/* son tres dolores, no dos: la rejilla compartida va a dos columnas */
+	@media (min-width: 900px) {
+		.pains.trio {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+</style>

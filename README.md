@@ -62,6 +62,25 @@ Para más detalles sobre la configuración, consulta [ENV_SETUP.md](./ENV_SETUP.
 | `npm run astro ...`       | Ejecuta comandos CLI como `astro add`, `astro check` |
 | `npm run astro -- --help` | Obtiene ayuda sobre el CLI de Astro             |
 
+## 🚢 CI / Despliegue
+
+El workflow `.github/workflows/ci.yml` corre en cada push y pull request a `master`:
+
+1. **Lint y build** — `npm ci`, `npm run lint` y `npm run build` sobre Node 22.
+2. **Deploy a Vercel** — solo en push a `master` y solo si el job anterior pasó.
+
+El deploy usa el CLI de Vercel (`vercel pull` → `vercel build --prod` → `vercel deploy --prebuilt --prod`) y necesita estos *secrets* en GitHub → Settings → Secrets and variables → Actions:
+
+| Secret              | De dónde sale                                                        |
+| :------------------ | :------------------------------------------------------------------- |
+| `VERCEL_TOKEN`      | Vercel → Account Settings → Tokens                                    |
+| `VERCEL_ORG_ID`     | `.vercel/project.json` (campo `orgId`) o Vercel → Settings → General   |
+| `VERCEL_PROJECT_ID` | `.vercel/project.json` (campo `projectId`)                            |
+
+Si falta alguno de los tres, el job de deploy se salta sin fallar el pipeline (queda anotado en el resumen del run).
+
+**Nota**: si el proyecto ya está conectado a Vercel por la integración de Git, ese deploy automático sigue activo y se duplicaría con este workflow. En ese caso, desactiva la integración en Vercel → Settings → Git o elimina el job `deploy`.
+
 ## 📁 Estructura del Proyecto
 
 ```

@@ -1,0 +1,50 @@
+---
+import Tick from '../Tick.astro';
+import { LABS_CTA_HREF, LABS_CTA_LABEL } from '../../data/cta';
+
+const guarantees = ['Evaluación automática sobre GitHub real', 'Continuidad entre períodos'];
+---
+
+<section class="brand hero" id="labs-hero">
+	<span class="blob v"></span><span class="blob i"></span><span class="blob s"></span>
+	<div class="wrap two">
+		<div>
+			<span class="pill" data-reveal><span class="dot"></span>Universidades e institutos</span>
+			<h1 data-reveal style="--rd:70ms">
+				Los proyectos académicos dejan de morir al final del período.
+			</h1>
+			<p class="sub" data-reveal style="--rd:150ms">
+				Se convierten en <b>equipos de producto permanentes</b>: estudiantes sobre productos reales,
+				con usuarios reales, que mejoran generación tras generación.
+			</p>
+			<div class="cta" data-reveal style="--rd:230ms">
+				<a class="btn primary" href={LABS_CTA_HREF} data-cta="labs-hero">{LABS_CTA_LABEL}</a>
+				<p class="micro">
+					Una asignatura, un período<span class="sep">·</span>Sin cambiar de LMS
+				</p>
+			</div>
+			<div class="under" data-reveal style="--rd:300ms">
+				{
+					guarantees.map((item) => (
+						<span>
+							<Tick />
+							{item}
+						</span>
+					))
+				}
+			</div>
+		</div>
+		<div data-reveal style="--rd:200ms">
+			<img
+				class="shot"
+				src="/producto/labs-bienvenida.webp"
+				alt="Pantalla de bienvenida de Yura: acceso para el estudiante, configuración del profesor e inicio de sesión"
+				width="1057"
+				height="698"
+				loading="lazy"
+				decoding="async"
+			/>
+			<p class="caption" style="color:rgba(233,238,255,.5)">la plataforma, hoy en producción</p>
+		</div>
+	</div>
+</section>

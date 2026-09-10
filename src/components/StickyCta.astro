@@ -1,28 +1,47 @@
 ---
-import { CTA_HREF, CTA_LABEL } from '../data/cta';
+interface Props {
+	href: string;
+	label: string;
+	note: string;
+	/** Selector del hero: la CTA aparece cuando queda arriba. */
+	hero: string;
+	/** Selector del formulario: la CTA se esconde cuando entra en pantalla. */
+	signup: string;
+	/** Valor de data-cta para analytics. */
+	source: string;
+}
+
+const { href, label, note, hero, signup, source } = Astro.props;
 ---
 
-<div class="sticky" id="sticky">
-	<a class="btn primary" href={CTA_HREF} data-cta="sticky">{CTA_LABEL}</a>
-	<div class="mc">Sin tarjeta · Te avisamos del lanzamiento</div>
+<div class="sticky" data-hero={hero} data-signup={signup}>
+	<a class="btn primary" href={href} data-cta={source}>{label}</a>
+	<div class="mc">{note}</div>
 </div>
 
 <script>
 	// CTA fija en móvil: aparece tras el hero y se esconde sobre el registro.
-	const sticky = document.getElementById('sticky');
-	const hero = document.querySelector('.hero');
-	const signup = document.getElementById('crear-cuenta');
+	// Va una por panel; la del panel oculto no se renderiza y no estorba.
+	// el globo de WhatsApp se aparta cuando la CTA fija está arriba
+	const syncBody = () =>
+		document.body.classList.toggle('has-sticky', !!document.querySelector('.sticky.on'));
 
-	if (sticky && hero && signup) {
+	document.querySelectorAll<HTMLElement>('.sticky[data-hero]').forEach((sticky) => {
+		const hero = document.querySelector(sticky.dataset.hero!);
+		const signup = document.querySelector(sticky.dataset.signup!);
+		if (!hero || !signup) return;
+
 		const update = () => {
 			const pastHero = hero.getBoundingClientRect().bottom < 0;
 			const signupRect = signup.getBoundingClientRect();
 			const signupVisible = signupRect.top < window.innerHeight && signupRect.bottom > 0;
 			sticky.classList.toggle('on', pastHero && !signupVisible);
+			syncBody();
 		};
 
 		window.addEventListener('scroll', update, { passive: true });
 		window.addEventListener('resize', update);
+		document.addEventListener('yura:panel', update);
 		update();
-	}
+	});
 </script>

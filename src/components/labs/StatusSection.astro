@@ -1,0 +1,201 @@
+---
+import Tick from '../Tick.astro';
+import { roadmap, notIs } from '../../data/labs';
+import { LABS_CTA_HREF } from '../../data/cta';
+---
+
+<section class="sec sec-tint" id="labs-estado">
+	<div class="wrap">
+		<span class="eyebrow" data-reveal>Qué existe hoy y qué no</span>
+		<h2 class="t" data-reveal style="--rd:60ms">El modelo llega por partes, y en este orden.</h2>
+		<p class="lead" data-reveal style="--rd:120ms">
+			
+		</p>
+
+		<div class="road">
+			{
+				roadmap.map((stage, index) => (
+					<div class:list={['lane', stage.available && 'on']} data-reveal style={`--rd:${index * 110}ms`}>
+						<span class="stage">{stage.stage}</span>
+						<h3>{stage.title}</h3>
+						<ul>
+							{stage.items.map((item) => (
+								<li>
+									<Tick />
+									<span>{item}</span>
+								</li>
+							))}
+						</ul>
+					</div>
+				))
+			}
+		</div>
+
+
+		<div class="nots">
+			<span class="eyebrow dim" data-reveal>Lo que Yura no es</span>
+			{
+				notIs.map((item, index) => (
+					<div class="not" data-reveal style={`--rd:${index * 70}ms`}>
+						<b>{item.title}</b>
+						<span>{item.body}</span>
+					</div>
+				))
+			}
+		</div>
+
+		<div class="invite-sep">
+			<div class="invite" data-reveal>
+				<b>¿Tu carrera no es de software?</b>
+				<span>
+					Hoy el modelo corre de punta a punta sobre repositorios, pero el laboratorio se define
+					contigo. Si lo tuyo es diseño, marketing, gestión u otra área,{' '}
+					<a href={LABS_CTA_HREF} data-cta="labs-otra-area">cuéntanoslo</a> y lo armamos juntos.
+				</span>
+			</div>
+		</div>
+	</div>
+</section>
+
+<style>
+	.road {
+		display: grid;
+		gap: 12px;
+		margin-top: 28px;
+	}
+
+	.lane {
+		border: 1px solid var(--border);
+		border-radius: var(--radius-lg);
+		background: var(--card);
+		padding: 20px 18px;
+	}
+
+	.lane.on {
+		border-color: var(--teal-300);
+		box-shadow: 0 0 0 1px var(--teal-300);
+	}
+
+	.stage {
+		display: inline-flex;
+		align-items: center;
+		height: 22px;
+		padding: 0 9px;
+		border-radius: 999px;
+		background: #eaf1f2;
+		color: var(--muted-fg);
+		font: 600 10px/1 var(--font-mono);
+		letter-spacing: 0.1em;
+		text-transform: uppercase;
+	}
+
+	.lane.on .stage {
+		background: var(--teal-100);
+		color: var(--teal-deep);
+	}
+
+	.lane h3 {
+		font-size: 17px;
+		font-weight: 650;
+		margin-top: 13px;
+	}
+
+	.lane ul {
+		display: grid;
+		gap: 9px;
+		margin-top: 14px;
+		padding-top: 14px;
+		border-top: 1px solid var(--border-soft);
+	}
+
+	.lane li {
+		display: flex;
+		gap: 10px;
+		align-items: flex-start;
+		font-size: 13.5px;
+		color: var(--muted-fg);
+	}
+
+	.lane.on li {
+		color: var(--fg);
+	}
+
+
+	/* misma pauta de separación que .nots */
+	.invite-sep {
+		margin-top: 34px;
+		padding-top: 26px;
+		border-top: 1px solid var(--border);
+	}
+
+	/* sobre el fondo tintado de la sección, la tarjeta va en blanco */
+	.invite {
+		padding: 20px 18px;
+		border: 1px solid var(--teal-200);
+		border-radius: var(--radius-lg);
+		background: var(--card);
+		text-align: center;
+	}
+
+	.invite b {
+		display: block;
+		font-size: clamp(17px, 4.4vw, 20px);
+		font-weight: 650;
+		letter-spacing: -0.02em;
+	}
+
+	.invite span {
+		display: block;
+		margin-top: 7px;
+		font-size: 14.5px;
+		color: var(--muted-fg);
+		max-width: 62ch;
+		margin-inline: auto;
+	}
+
+	.invite a {
+		font-weight: 600;
+	}
+
+	.nots {
+		margin-top: 34px;
+		border-top: 1px solid var(--border);
+		padding-top: 18px;
+	}
+
+	.not {
+		display: grid;
+		gap: 3px;
+		padding: 13px 0;
+		border-bottom: 1px solid var(--border-soft);
+	}
+
+	.not:last-child {
+		border-bottom: 0;
+		padding-bottom: 0;
+	}
+
+	.not b {
+		font-size: 14.5px;
+		font-weight: 650;
+	}
+
+	.not span {
+		font-size: 14px;
+		color: var(--muted-fg);
+	}
+
+	@media (min-width: 900px) {
+		.road {
+			grid-template-columns: repeat(3, 1fr);
+			gap: 14px;
+			align-items: stretch;
+		}
+
+		.not {
+			grid-template-columns: 260px 1fr;
+			gap: 0 20px;
+			align-items: baseline;
+		}
+	}
+</style>

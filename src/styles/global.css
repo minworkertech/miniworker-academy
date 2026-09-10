@@ -15,6 +15,8 @@
 html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
 body{margin:0;font-family:var(--font-sans);background:var(--bg);color:var(--fg);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 img,svg{display:block;max-width:100%}
+/* paneles de producto: solo uno visible a la vez */
+.panel[hidden]{display:none}
 a{color:var(--teal-deep);text-decoration:none}
 a:hover{color:var(--teal-deeper)}
 h1,h2,h3,h4{margin:0;letter-spacing:-0.025em;line-height:1.14;text-wrap:balance}
@@ -50,14 +52,20 @@ h2.t{font-size:clamp(26px,6.2vw,40px);font-weight:700;margin-top:14px;letter-spa
 
 /* header */
 header.site{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--border-soft)}
-.hd{display:flex;align-items:center;justify-content:space-between;gap:12px;height:60px}
+.hd{display:flex;align-items:center;gap:14px;height:60px}
+.hd .switch{margin-left:auto}
 .logo{display:flex;align-items:center;gap:9px;color:var(--fg);font-weight:700;font-size:19px;letter-spacing:-0.03em}
 .logo .mark{width:22px;height:auto;flex:none}
 .logo .wordmark{height:34px;width:auto;flex:none}
-@media (max-width:420px){.logo .wordmark{height:28px}}
 /* lockup con lema: se dimensiona por ancho para que la bajada siga siendo legible */
-.logo .wordmark.lema{height:auto;width:min(260px,100%)}
+.logo .wordmark.lema{height:auto;width:min(100%,330px)}
+@media (max-width:420px){.logo .wordmark{height:28px}}
+@media (max-width:380px){.logo .wordmark{height:24px}}
 .hd .btn{min-height:40px;font-size:14px;padding:0 14px}
+
+/* entrada al hacer scroll: .rv lo agrega el script, nunca el HTML */
+[data-reveal].rv{opacity:0;transform:translateY(16px);transition:opacity 560ms cubic-bezier(.2,.8,.2,1) var(--rd,0ms),transform 560ms cubic-bezier(.2,.8,.2,1) var(--rd,0ms)}
+[data-reveal].rv.in{opacity:1;transform:none}
 
 /* momento de marca */
 .brand{position:relative;background:var(--brand-dark);color:#fff;overflow:hidden;isolation:isolate}
@@ -82,6 +90,8 @@ header.site{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.88);ba
 .dot{width:6px;height:6px;border-radius:999px;background:#5ce6a8}
 .under{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:22px;font:500 13px var(--font-sans);color:rgba(233,238,255,.72)}
 .under span{display:inline-flex;align-items:flex-start;gap:8px}
+/* captura de producto del hero: img.shot le gana al img{max-width:100%} de arriba */
+img.shot{width:100%;height:auto;margin-top:34px;border:1px solid var(--border);border-radius:var(--radius-xl);box-shadow:var(--shadow-lg)}
 
 /* ventana de producto */
 .mock{border:1px solid var(--border);border-radius:var(--radius-xl);background:var(--card);box-shadow:var(--shadow-lg);overflow:hidden;color:var(--fg);container-type:inline-size;container-name:mock}
@@ -159,11 +169,6 @@ header.site{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.88);ba
 .video .play .ic{width:24px;height:24px}
 .video .t1{font-size:clamp(15px,3.6vw,18px);font-weight:600;color:#fff;letter-spacing:-0.02em}
 .video .t2{font:500 11.5px/1.7 var(--font-mono);color:rgba(233,238,255,.6);margin-top:8px;max-width:46ch;margin-inline:auto}
-.shots{display:grid;gap:14px;margin-top:16px}
-.shot{border:1px solid var(--border);border-radius:var(--radius-lg);background:var(--card);overflow:hidden;box-shadow:var(--shadow-sm)}
-.shot .cap{display:flex;align-items:center;gap:9px;padding:11px 14px;border-bottom:1px solid var(--border-soft);background:var(--bg-tint);font:600 12px var(--font-sans);color:var(--fg)}
-.shot .cap .n{font:600 10px var(--font-mono);color:#fff;background:var(--teal);width:19px;height:19px;border-radius:6px;display:grid;place-items:center;flex:none}
-.shot .in{padding:14px}
 .filerow{display:flex;align-items:center;gap:9px;padding:9px 10px;border:1px solid var(--border-soft);border-radius:9px;font:500 12px var(--font-mono);color:var(--muted-fg);background:var(--card)}
 .filerow+.filerow{margin-top:7px}
 .filerow .ic{width:15px;height:15px;color:var(--teal)}
@@ -287,14 +292,13 @@ details p{font-size:14.5px;color:var(--muted-fg);padding:0 0 18px;max-width:70ch
 
 /* footer */
 footer{border-top:1px solid var(--border-soft);padding:34px 0 110px;background:var(--bg-tint)}
-.ft{display:grid;gap:26px}
-.ft .cols{display:grid;gap:26px;align-items:start}
-.ft .brand-col{max-width:38ch}
+.ft{display:grid;gap:22px}
+.ft .cols{display:grid;gap:24px;align-items:start}
 .ft a{font-size:14.5px;color:var(--muted-fg);display:block;padding:3px 0}
 .ft a:hover{color:var(--teal-deep)}
 .ft .social a{display:flex;align-items:center;gap:8px}
 .ft .social svg{flex:none;opacity:.85}
-.ft .cr{font-size:12.5px;color:var(--muted-fg);border-top:1px solid var(--border);padding-top:16px}
+.ft .cr{font-size:13.5px;color:var(--muted-fg);border-top:1px solid var(--border);padding-top:16px}
 
 /* cta fija móvil */
 .sticky{position:fixed;left:0;right:0;bottom:0;z-index:70;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:rgba(255,255,255,.93);backdrop-filter:blur(12px);border-top:1px solid var(--border);transform:translateY(120%);transition:transform 260ms cubic-bezier(.2,.8,.2,1)}
@@ -313,13 +317,13 @@ footer{border-top:1px solid var(--border-soft);padding:34px 0 110px;background:v
 .grid2{grid-template-columns:repeat(2,1fr);gap:16px}
 .steps{grid-template-columns:repeat(3,1fr)}
 .pains{grid-template-columns:repeat(2,1fr)}
-.shots{grid-template-columns:repeat(2,1fr);gap:16px}
 .plans{grid-template-columns:repeat(3,1fr);align-items:stretch}
 .cmp .r{grid-template-columns:190px 1fr 1fr;align-items:stretch}
 .cmp .k{padding:16px;display:flex;align-items:center}
 .cmp .a,.cmp .b{padding:16px;border-left:1px solid var(--border-soft)}
 .cmp .b{background:var(--teal-50)}
 .cmp .lbl{display:none}
+footer{padding:34px 0 44px}
 .ft .cols{grid-template-columns:minmax(0,1fr) auto auto;gap:24px clamp(40px,7vw,88px)}
 .ft .cols>*+*{padding-top:5px}
 .sticky{display:none}
@@ -331,7 +335,6 @@ footer{border-top:1px solid var(--border-soft);padding:34px 0 110px;background:v
 @media (min-width:1080px){
 .hero .two{grid-template-columns:1.04fr 1fr;gap:48px;align-items:center}
 .hero h1{font-size:clamp(42px,4.4vw,58px)}
-.shots{grid-template-columns:repeat(4,1fr)}
 }
 @container mock (min-width:500px){
 .mock .main{padding:20px 20px 22px}

@@ -1,0 +1,194 @@
+---
+/**
+ * Pill de dos productos en el header. Cambia el panel visible de la landing:
+ * una sola URL, con `#labs` en el hash para poder mandar el link directo.
+ */
+const products = [
+	{ key: 'docentes', label: 'Yura Docentes', short: 'Docentes' },
+	{ key: 'labs', label: 'Yura Labs', short: 'Labs' },
+];
+---
+
+<div class="switch" role="group" aria-label="Producto">
+	{
+		products.map((product, index) => (
+			<button
+				type="button"
+				class="switch-btn"
+				data-switch={product.key}
+				aria-pressed={index === 0 ? 'true' : 'false'}
+			>
+				<span class="long">{product.label}</span>
+				<span class="short">{product.short}</span>
+			</button>
+		))
+	}
+</div>
+
+<style>
+	.switch {
+		display: inline-flex;
+		gap: 2px;
+		padding: 4px;
+		border-radius: 999px;
+		background: var(--teal-50);
+		border: 1px solid var(--teal-200);
+	}
+
+	.switch-btn {
+		border: 0;
+		background: transparent;
+		border-radius: 999px;
+		height: 32px;
+		padding: 0 14px;
+		font: 600 13px/1 var(--font-sans);
+		letter-spacing: -0.01em;
+		color: var(--muted-fg);
+		cursor: pointer;
+		white-space: nowrap;
+		transition:
+			background 140ms ease,
+			color 140ms ease;
+	}
+
+	.switch-btn:hover {
+		color: var(--fg);
+	}
+
+	.switch-btn[aria-pressed='true'] {
+		background: var(--brand-dark);
+		color: #fff;
+	}
+
+	.switch-btn:focus-visible {
+		outline: none;
+		box-shadow: 0 0 0 3px rgba(31, 132, 150, 0.5);
+	}
+
+	/* bajo 520px el logo ya dice Yura: la etiqueta se queda con lo que distingue */
+	.short {
+		display: none;
+	}
+
+	@media (max-width: 520px) {
+		.switch-btn {
+			height: 30px;
+			padding: 0 11px;
+			font-size: 12.5px;
+		}
+
+		.long {
+			display: none;
+		}
+
+		.short {
+			display: inline;
+		}
+	}
+
+	/* a 320px el logo y el pill comparten 280px de ancho útil */
+	@media (max-width: 380px) {
+		.switch {
+			padding: 3px;
+		}
+
+		.switch-btn {
+			padding: 0 9px;
+			font-size: 12px;
+		}
+	}
+</style>
+
+<script>
+	type Key = 'docentes' | 'labs';
+
+	const DEFAULT: Key = 'docentes';
+
+	const panels = Array.from(document.querySelectorAll<HTMLElement>('[data-panel]'));
+	const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-switch]'));
+
+	const asKey = (value: string | undefined): Key =>
+		value === 'labs' ? 'labs' : 'docentes';
+
+	let active: Key = DEFAULT;
+
+	function apply(key: Key): void {
+		active = key;
+		panels.forEach((panel) => {
+			panel.hidden = panel.dataset.panel !== key;
+		});
+		buttons.forEach((button) =>
+			button.setAttribute('aria-pressed', String(button.dataset.switch === key))
+		);
+		// la CTA fija de cada panel vuelve a medirse contra su propio hero
+		document.dispatchEvent(new CustomEvent('yura:panel', { detail: key }));
+	}
+
+	/** El panel que pide el hash, y el elemento al que hay que bajar (si lo hay). */
+	function fromHash(): { key: Key; target: HTMLElement | null } {
+		const raw = location.hash.slice(1);
+		// un hash mal formado no puede dejar la landing sin switcher
+		let id = raw;
+		try {
+			id = decodeURIComponent(raw);
+		} catch {
+			/* se usa el hash tal cual */
+		}
+
+		if (!id) return { key: DEFAULT, target: null };
+		if (id === 'labs') return { key: 'labs', target: null };
+
+		const target = document.getElementById(id);
+		const panel = target?.closest<HTMLElement>('[data-panel]');
+		return { key: asKey(panel?.dataset.panel), target: target ?? null };
+	}
+
+	function restore(): void {
+		const { key, target } = fromHash();
+		apply(key);
+		// el navegador no pudo bajar solo: el destino venía oculto en el HTML
+		if (target) requestAnimationFrame(() => target.scrollIntoView({ block: 'start' }));
+	}
+
+	buttons.forEach((button) =>
+		button.addEventListener('click', () => {
+			const key = asKey(button.dataset.switch);
+			if (key === active) return;
+
+			apply(key);
+			const url = key === 'labs' ? '#labs' : location.pathname + location.search;
+			history.pushState({ yura: key }, '', url);
+			window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+		})
+	);
+
+	document.addEventListener('click', (event) => {
+		const node = event.target;
+		if (!(node instanceof Element)) return;
+
+		const link = node.closest<HTMLAnchorElement>('a[href^="#"]');
+		if (!link) return;
+
+		// el logo sube al inicio del panel visible, no al ancla de un panel oculto
+		if (link.hasAttribute('data-top')) {
+			event.preventDefault();
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+			return;
+		}
+
+		const id = link.getAttribute('href')!.slice(1);
+		if (!id) return;
+
+		const target = document.getElementById(id);
+		const panel = target?.closest<HTMLElement>('[data-panel]');
+		if (!target || !panel || !panel.hidden) return;
+
+		event.preventDefault();
+		apply(asKey(panel.dataset.panel));
+		history.pushState({ yura: panel.dataset.panel }, '', `#${id}`);
+		target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+	});
+
+	window.addEventListener('popstate', restore);
+	restore();
+</script>

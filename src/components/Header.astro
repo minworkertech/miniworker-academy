@@ -1,11 +1,11 @@
 ---
 import logo from '../assets/yura-principal.svg';
-import { CTA_HREF, CTA_LABEL } from '../data/cta';
+import ProductSwitcher from './ProductSwitcher.astro';
 ---
 
 <header class="site">
 	<div class="wrap hd">
-		<a class="logo" href="#top" aria-label="Yura">
+		<a class="logo" href="#top" data-top aria-label="Yura">
 			<img
 				class="wordmark"
 				src={logo.src}
@@ -14,6 +14,7 @@ import { CTA_HREF, CTA_LABEL } from '../data/cta';
 				height={logo.height}
 			/>
 		</a>
-		<a class="btn primary" href={CTA_HREF} data-cta="header">{CTA_LABEL}</a>
+
+		<ProductSwitcher />
 	</div>
 </header>
