@@ -1,0 +1,441 @@
+---
+/**
+ * El significado del nombre. Botón discreto + diálogo modal.
+ *
+ * «Yura» es planta en kichwa, y el emblema es un brote: un tallo con dos hojas.
+ * El diálogo se lee hacia abajo y va dibujando ese brote —semilla, tallo,
+ * hojas— con lo que creemos de la educación. Es la metáfora del nombre, no
+ * el catálogo: aquí no se habla de lo que hace ningún producto.
+ *
+ * Se renderiza una vez por panel (va dentro del Footer, que es compartido),
+ * así que nada aquí usa `id` fijo: los ids del diálogo se generan por
+ * instancia y el script engancha cada botón con su propio diálogo.
+ */
+
+/** Geometría de las dos hojas del logo (yura-principal.svg). */
+const LEAF_LEFT = 'M32 35 A 24 24 0 0 1 8 11 A 24 24 0 0 1 32 35 Z';
+const LEAF_RIGHT = 'M32 35 A 24 24 0 0 0 56 11 A 24 24 0 0 0 32 35 Z';
+
+const uid = Math.random().toString(36).slice(2, 8);
+const titleId = `yura-nombre-${uid}`;
+
+const parts = [
+	{
+		word: 'muyu',
+		gloss: 'semilla',
+		body: 'Nadie aprende de golpe. Todo empieza pequeño y en manos de alguien que decidió sembrarlo.',
+	},
+	{
+		word: 'yura',
+		gloss: 'la planta',
+		body: 'Y nada crece a la fuerza. Se le da tiempo, terreno y quien lo cuide. Eso es enseñar.',
+	},
+	{
+		word: 'panka',
+		gloss: 'hoja',
+		body: 'Una planta que prende da sombra a las que vienen atrás y deja semillas. Quien aprendió, enseña.',
+	},
+];
+---
+
+<div class="meaning" data-meaning>
+	<button type="button" class="trigger" data-meaning-open aria-haspopup="dialog">
+		<svg class="sprout" viewBox="0 0 64 60" aria-hidden="true">
+			<rect x="28.6" y="27" width="6.8" height="31" rx="3.4" fill="currentColor" opacity=".55"
+			></rect>
+			<path d={LEAF_LEFT} fill="#2a8396"></path>
+			<path d={LEAF_RIGHT} fill="#5cb3c2"></path>
+		</svg>
+		<span class="tx">¿Qué significa «Yura»?</span>
+	</button>
+
+	<dialog class="sheet" data-meaning-dialog aria-labelledby={titleId}>
+		<div class="inner" data-meaning-inner>
+			<button type="button" class="close" data-meaning-close aria-label="Cerrar">
+				<svg viewBox="0 0 24 24" aria-hidden="true">
+					<path
+						d="M6 6l12 12M18 6L6 18"
+						fill="none"
+						stroke="currentColor"
+						stroke-width="1.8"
+						stroke-linecap="round"></path>
+				</svg>
+			</button>
+
+			<h2 id={titleId}>«Yura» es planta, en kichwa.</h2>
+			<p class="lead">Lo elegimos como emblema porque así entendemos la educación.</p>
+
+			<ol class="stem">
+				{
+					parts.map((part, index) => (
+						<li class={index === parts.length - 1 ? 'leafy' : undefined}>
+							{index === 0 && <span class="seed" aria-hidden="true" />}
+							{index === parts.length - 1 && (
+								<svg class="leaves" viewBox="0 0 64 40" aria-hidden="true">
+									{/* sobre la superficie oscura las hojas suben un paso de la escala */}
+									<path d={LEAF_LEFT} fill="var(--teal-400)" />
+									<path d={LEAF_RIGHT} fill="var(--teal-300)" />
+								</svg>
+							)}
+							<p class="w">
+								<b>{part.word}</b>
+								<span>{part.gloss}</span>
+							</p>
+							<p class="bd">{part.body}</p>
+						</li>
+					))
+				}
+			</ol>
+
+			<div class="outro">
+				<p>
+					Nuestro trabajo es el terreno: que enseñar sea lo que ocupe el tiempo de un docente y
+					no lo que le queda al final del día.
+				</p>
+				<p class="last">
+					Por eso el emblema es un brote y no un árbol: la educación no se entrega hecha, se
+					siembra.
+				</p>
+			</div>
+			<p class="note">muyu, yura y panka son palabras del kichwa ecuatoriano.</p>
+		</div>
+	</dialog>
+</div>
+
+<style>
+	/* botón: pesa lo mismo que un enlace del footer, con el brote como pista */
+	.trigger {
+		display: inline-flex;
+		align-items: center;
+		gap: 9px;
+		margin-top: 16px;
+		padding: 0;
+		border: 0;
+		background: transparent;
+		font: 500 14.5px/1.5 var(--font-sans);
+		color: var(--muted-fg);
+		text-align: left;
+		cursor: pointer;
+		transition: color 140ms ease;
+	}
+
+	.trigger:hover {
+		color: var(--teal-deep);
+	}
+
+	.trigger:focus-visible {
+		outline: none;
+		box-shadow: 0 0 0 3px rgba(31, 132, 150, 0.5);
+		border-radius: 6px;
+	}
+
+	.trigger .sprout {
+		width: 15px;
+		height: auto;
+		flex: none;
+		color: var(--teal-deep);
+	}
+
+	.trigger .tx {
+		text-decoration: underline;
+		text-decoration-thickness: 1px;
+		text-decoration-color: var(--teal-300);
+		text-underline-offset: 3px;
+	}
+
+	/* diálogo: el marco no pinta nada, así un clic fuera de .inner cae en el backdrop */
+	.sheet {
+		width: min(520px, calc(100vw - 32px));
+		max-width: none;
+		max-height: calc(100vh - 48px);
+		padding: 0;
+		border: 0;
+		background: transparent;
+		color: #fff;
+		overflow: visible;
+	}
+
+	.sheet::backdrop {
+		background: rgba(7, 18, 21, 0.62);
+		backdrop-filter: blur(3px);
+	}
+
+	.inner {
+		position: relative;
+		isolation: isolate;
+		max-height: calc(100vh - 48px);
+		overflow-y: auto;
+		overscroll-behavior: contain;
+		padding: 26px 24px 24px;
+		border: 1px solid rgba(255, 255, 255, 0.14);
+		border-radius: var(--radius-xl);
+		background: var(--brand-dark);
+		box-shadow: var(--shadow-lg);
+	}
+
+	/* la misma trama de la superficie de marca, para que el diálogo sea de la casa */
+	.inner::after {
+		content: '';
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+		background-image:
+			linear-gradient(rgba(255, 255, 255, 0.6) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(255, 255, 255, 0.6) 1px, transparent 1px);
+		background-size: 60px 60px;
+		opacity: 0.04;
+		pointer-events: none;
+		z-index: -1;
+	}
+
+	.close {
+		position: absolute;
+		top: 16px;
+		right: 16px;
+		width: 32px;
+		height: 32px;
+		display: grid;
+		place-items: center;
+		border-radius: 999px;
+		border: 1px solid rgba(255, 255, 255, 0.18);
+		background: rgba(255, 255, 255, 0.07);
+		color: rgba(233, 238, 255, 0.78);
+		cursor: pointer;
+		transition:
+			background 140ms ease,
+			color 140ms ease;
+	}
+
+	.close:hover {
+		background: rgba(255, 255, 255, 0.14);
+		color: #fff;
+	}
+
+	.close:focus-visible {
+		outline: none;
+		box-shadow: 0 0 0 3px rgba(92, 179, 194, 0.55);
+	}
+
+	.close svg {
+		width: 16px;
+		height: 16px;
+	}
+
+	h2 {
+		font-size: clamp(22px, 5.6vw, 28px);
+		font-weight: 700;
+		letter-spacing: -0.032em;
+		padding-right: 44px;
+	}
+
+	.lead {
+		margin-top: 10px;
+		font-size: 15px;
+		color: rgba(233, 238, 255, 0.72);
+		max-width: 40ch;
+	}
+
+	/* el tallo: la línea la forman los propios ítems, que salvan el gap */
+	.stem {
+		margin-top: 24px;
+		display: grid;
+		gap: 22px;
+		padding-left: 46px;
+	}
+
+	.stem li {
+		position: relative;
+	}
+
+	.stem li::before {
+		content: '';
+		position: absolute;
+		left: -29px;
+		top: 0;
+		bottom: -22px;
+		width: 2px;
+		border-radius: 2px;
+		background: rgba(92, 179, 194, 0.5);
+		transform-origin: top center;
+	}
+
+	/* arranca en el centro de la semilla */
+	.stem li:first-child::before {
+		top: 12px;
+	}
+
+	/* y muere en el nacimiento de las hojas */
+	.stem li:nth-child(2)::before {
+		bottom: -36px;
+	}
+
+	.stem li.leafy::before {
+		display: none;
+	}
+
+	.seed {
+		position: absolute;
+		left: -34px;
+		top: 6px;
+		width: 12px;
+		height: 12px;
+		border-radius: 999px;
+		background: #5ce6a8;
+		box-shadow: 0 0 0 5px rgba(92, 230, 168, 0.14);
+	}
+
+	/* la unión de las hojas cae justo donde termina el tallo */
+	.leaves {
+		position: absolute;
+		left: -50px;
+		top: -10px;
+		width: 44px;
+		height: auto;
+		transform-origin: 50% 87.5%;
+	}
+
+	.w {
+		display: flex;
+		align-items: baseline;
+		gap: 10px;
+		flex-wrap: wrap;
+	}
+
+	.w b {
+		font-size: 22px;
+		font-weight: 700;
+		letter-spacing: -0.03em;
+		color: #fff;
+	}
+
+	.w span {
+		font: 500 12px var(--font-mono);
+		color: #93ccd7;
+	}
+
+	.bd {
+		margin-top: 7px;
+		font-size: 14.5px;
+		color: rgba(233, 238, 255, 0.74);
+		max-width: 42ch;
+	}
+
+	.outro {
+		margin-top: 24px;
+		padding-top: 18px;
+		border-top: 1px solid rgba(255, 255, 255, 0.12);
+		display: grid;
+		gap: 10px;
+		font-size: 15px;
+		color: rgba(233, 238, 255, 0.78);
+	}
+
+	/* la frase con la que se cierra: es la que se recuerda */
+	.outro .last {
+		font-weight: 600;
+		letter-spacing: -0.012em;
+		color: #fff;
+	}
+
+	.note {
+		margin-top: 7px;
+		font: 500 11.5px/1.6 var(--font-mono);
+		color: rgba(233, 238, 255, 0.45);
+	}
+
+	/*
+	 * Un solo momento: al abrir, el tallo crece y las hojas se abren.
+	 * El estado de reposo ya es el final, así que con `prefers-reduced-motion`
+	 * (que apaga las animaciones en global.css) el brote se ve completo.
+	 */
+	.sheet.in .stem li::before {
+		animation: grow 520ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+	}
+
+	.sheet.in .stem li:nth-child(2)::before {
+		animation-delay: 140ms;
+	}
+
+	.sheet.in .leaves {
+		animation: unfold 460ms cubic-bezier(0.2, 0.8, 0.2, 1) 380ms both;
+	}
+
+	@keyframes grow {
+		from {
+			transform: scaleY(0);
+		}
+		to {
+			transform: scaleY(1);
+		}
+	}
+
+	@keyframes unfold {
+		from {
+			opacity: 0;
+			transform: scale(0.6);
+		}
+		to {
+			opacity: 1;
+			transform: scale(1);
+		}
+	}
+
+	@media (max-width: 420px) {
+		.inner {
+			padding: 22px 18px 20px;
+		}
+
+		.stem {
+			padding-left: 40px;
+		}
+
+		.stem li::before {
+			left: -25px;
+		}
+
+		.seed {
+			left: -30px;
+		}
+
+		.leaves {
+			left: -44px;
+			top: -9px;
+			width: 40px;
+		}
+	}
+</style>
+
+<script>
+	import { track } from '../scripts/track';
+
+	document.querySelectorAll<HTMLElement>('[data-meaning]').forEach((root) => {
+		const dialog = root.querySelector<HTMLDialogElement>('[data-meaning-dialog]');
+		const inner = root.querySelector<HTMLElement>('[data-meaning-inner]');
+		const opener = root.querySelector<HTMLButtonElement>('[data-meaning-open]');
+		const closer = root.querySelector<HTMLButtonElement>('[data-meaning-close]');
+		if (!dialog || !inner || !opener || !closer) return;
+
+		opener.addEventListener('click', () => {
+			// el brote se dibuja desde cero en cada apertura: se quita la clase,
+			// se abre, se fuerza el recálculo y recién ahí se vuelve a poner
+			dialog.classList.remove('in');
+			dialog.showModal();
+			void dialog.offsetWidth;
+			dialog.classList.add('in');
+			track('nombre_yura');
+		});
+
+		closer.addEventListener('click', () => dialog.close());
+
+		// un clic fuera del panel cierra; Escape ya lo hace el navegador
+		dialog.addEventListener('click', (event) => {
+			const box = inner.getBoundingClientRect();
+			const outside =
+				event.clientX < box.left ||
+				event.clientX > box.right ||
+				event.clientY < box.top ||
+				event.clientY > box.bottom;
+			if (outside) dialog.close();
+		});
+	});
+</script>

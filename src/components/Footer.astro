@@ -16,6 +16,7 @@ interface Props {
 }
 
 import logo from '../assets/yura-slogan-alineado.svg';
+import NameMeaning from './NameMeaning.astro';
 
 const currentYear = new Date().getFullYear();
 
@@ -67,6 +68,7 @@ const {
 						height={logo.height}
 					/>
 				</a>
+				<NameMeaning />
 			</div>
 			{
 				columns.map((column) => (
